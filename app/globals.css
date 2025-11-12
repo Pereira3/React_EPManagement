@@ -1,0 +1,30 @@
+@import "tailwindcss";  
+
+html {
+  background: rgb(235, 235, 235);
+  color: black;
+}
+
+main {
+  padding: 1%;
+  font-size: larger;
+}
+
+.typeOfDataButtons button {
+  color: blue;
+  text-decoration: underline;
+}
+.typeOfDataButtons button:disabled{
+  color: black;
+  text-decoration: none;
+}
+
+.mainData {
+  padding: 2%;
+}
+
+.managementButtons button {
+  margin-right: 10px;
+  padding: 3px 10px;
+  border: 2px solid black;
+}
