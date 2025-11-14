@@ -1,20 +1,23 @@
 import React, {useState} from 'react';
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormsName from '../Types/FormsText';
+import FormsDate from '../Types/FormsDate';
+import FormsRole from '../Types/FormsSelector';
+import FormsTeam from '../Types/FormsDropdown';
+import '../Forms.css';
+import { IndividualEmployee } from '../../../containers/Employees/Props';
 
-//Forms
-import FormsName from '../../../shared/FormsInputs/FormsName';
-import FormsDate from '../../../shared/FormsInputs/FormsDate';
-import FormsRole from '../../../shared/FormsInputs/FormsRole';
-import FormsTeam from '../../../shared/FormsInputs/FormsTeam';
+// TODO: Finish the local management and change
 
-import './ActionForms.css';
+export default function EditEmployee({setEmployee}:{setEmployee:React.Dispatch<React.SetStateAction<IndividualEmployee[]>>}){
 
-export default function EditingForms({ open, onClose }:{ open: boolean; onClose: () => void }){
+    const [dialog, setDialog] = useState(false);
+    // Initialization of a function to control the Dialogs
+    const onClose = () => setDialog(false);
 
     const [formValues, setFormValues] = useState({
         name: "",
@@ -34,7 +37,7 @@ export default function EditingForms({ open, onClose }:{ open: boolean; onClose:
 
     return (
         <React.Fragment>
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={dialog} onClose={onClose}>
             <DialogTitle>Add Employee</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit} id="addEmployee-form">

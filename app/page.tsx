@@ -1,60 +1,45 @@
 'use client'
+// React Imports
 import {useState} from 'react';
 
-//Importing Files
-import './globals.css';
+// Importing Style Sheet
+import './page.css';
+// Importing Components
 import NavBar from './components/NavBar/NavBar';
-import Employees from './components/Employees/Employees';
-import Projects from './components/Projects/Projects';
+import Routing from './Routing';
 
 // Importing the Props
-import { EmployeeObj } from './components/Employees/Props';
-import { ProjectObj } from './components/Projects/Props';
+import { IndividualEmployee } from './containers/Employees/Props';
+import { IndividualProject } from './containers/Projects/Props';
 
-export default function Home() {
+// Importing Routing
+import { BrowserRouter, Link } from 'react-router-dom';
 
-  //Control Top Buttons (Employee / Projects)
-  const [value, setValue] = useState(0);
+export default function Page() {
 
-  //Control Dialogs
-  const [openDialog, setDialog] = useState(false);
-  const [action, setAction] = useState('');
+  // Management of Employees
+  const [employees, setEmployee] = useState<IndividualEmployee[]>([]);
+  // Management of Projects
+  const [projects, setProject] = useState<IndividualProject[]>([]);
+  // Management of Buttons
+  const [disabled, setDisable] = useState(0);
 
-  const handleClicks = (type:string) => {
-    if(type === 'employees'){
-      setValue(0);
-    }else if(type === 'projects'){
-      setValue(1);
-    }else{
-      setAction(type);
-      setDialog(true);
-    }
-  }
-
-  // Managing the Employees
-  const [employee, setEmployee] = useState<EmployeeObj[]>([]);
-  const [project, setProject] = useState<ProjectObj[]>([]);
-  // Managing the Dialogs
-  const handleDialog = () => (setDialog(false), setAction(''));
+  const handleDisablement = (button:number) => setDisable(button);
 
   return (
-
-    <>
+    <BrowserRouter>
+      {/* Custom component defined in 'components/NavBar' that curretly only presents the header with "Employees & Projects Management" */}
       <NavBar />
-      <main>
-        {/** Employee and Project Buttons */}
-        <div className="typeOfDataButtons">
-          <button onClick={() => handleClicks("employees")} disabled={value === 0}>Employees</button>
-          {" | "}
-          <button onClick={() => handleClicks("projects")} disabled={value === 1}>Projects</button>
-        </div>
 
-        {/** Main Part */}
-        {value === 0 
-        ? <Employees employees={employee} setEmployees={setEmployee} openDialog={openDialog} action={action} handleClicks={handleClicks} handleDialog={handleDialog} />
-        : <Projects projects={project} setProjects={setProject} openDialog={openDialog} action={action} handleClicks={handleClicks} handleDialog={handleDialog} />
-        }
+      <main>
+        {/* Top Buttons */}
+        <Link to='/'><button className='topButton' disabled={disabled === 0} onClick={() => handleDisablement(0)}>Employees</button></Link> | {" "}
+        <Link to='/projects'><button className='topButton' disabled={disabled === 1} onClick={() => handleDisablement(1)}>Projects</button></Link>
+          
+        {/* Routing for the corresponding pages/containers */}
+        <Routing employees={employees} setEmployees={setEmployee} projects={projects} setProjects={setProject} />
+
       </main>
-    </>
+    </BrowserRouter>
   );
 }

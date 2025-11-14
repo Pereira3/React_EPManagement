@@ -1,0 +1,9 @@
+.mainData {
+  padding: 2%;
+}
+
+.managementButtons button {
+  margin-right: 10px;
+  padding: 3px 10px;
+  border: 2px solid black;
+}

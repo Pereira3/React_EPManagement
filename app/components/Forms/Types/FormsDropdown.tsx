@@ -1,6 +1,5 @@
-import {useState} from 'react'
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 
 import Box from '@mui/material/Box';
 import { MenuItem } from '@mui/material';
@@ -13,23 +12,15 @@ const teamsAvailable = [
     'Team D',
 ]
 
-export default function FormsTeam({value, onChange} : {value:string, onChange: (val:string) => void}) {
-
-    const [team, setTeam] = useState('Not Defined');
-
-    const onTeamChange = (event: SelectChangeEvent<typeof team>) => {
-        setTeam(event.target.value);
-        onChange(event.target.value)
-    }
-
+export default function FormsDropdown({value, onChange} : {value:string, onChange: (val:string) => void}) {
     return(
         <Box sx={{ display: 'flex', alignItems: 'center', gap:'15px'}}>
-            <span>Team:</span>
+            <span>Team: </span>
             <Select
                 autoComplete='false'
                 id="team"
-                value={team}
-                onChange={onTeamChange}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
                 input={<OutlinedInput/>}
             >
                 {teamsAvailable.map((team) => (
