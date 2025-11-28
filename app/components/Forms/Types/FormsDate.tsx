@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 export default function FormsDate({value, onChange}:{value:string, onChange: (val:string) => void}){
     return(
         <Box sx={{ display: 'flex', alignItems: 'center', gap:'15px'}}>
-            <span>"Date: "</span>
+            <span>Date: </span>
             <TextField
                 autoFocus
                 autoComplete='false'

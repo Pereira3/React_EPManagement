@@ -1,23 +1,23 @@
+// ----- IMPORTS -----
 import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormsText from '../Types/FormsText';
-import FormsDate from '../Types/FormsDate';
-import FormsSelector from '../Types/FormsSelector';
-import FormsDropdown from '../Types/FormsDropdown';
-import '../Forms.css';
-import { IndividualEmployee } from '../../../containers/Employees/Props';
-import { useNavigate } from 'react-router-dom';
+import FormsText from '../../Forms/Types/FormsText';
+import FormsDate from '../../Forms/Types/FormsDate';
+import FormsSelector from '../../Forms/Types/FormsSelector';
+import FormsDropdown from '../../Forms/Types/FormsDropdown';
+import { Employee } from '@/app/page';
 
-export default function AddEmployee({setEmployee}:{setEmployee:React.Dispatch<React.SetStateAction<IndividualEmployee[]>>}){
-
-    // Routing - Link doesn't work so Navigate is an alternative
-    const navigate = useNavigate();
-    const onClose = () => navigate("/");
-
+export default function AddEmp({
+    setEmployeeAE, 
+    setShowAdd,
+} : {
+    setEmployeeAE:React.Dispatch<React.SetStateAction<Employee[]>>,
+    setShowAdd:React.Dispatch<React.SetStateAction<'Add' | 'Edit' | 'Delete' | null>>
+}){
     // Initialization of Form values
     const [formValues, setFormValues] = useState({
         name: "",
@@ -34,12 +34,12 @@ export default function AddEmployee({setEmployee}:{setEmployee:React.Dispatch<Re
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        setEmployee(prev => {
+        setEmployeeAE(prev => {
             // I wanted the ID automatic so if the ID is the first one being introduced, the 0 (Default initial value) will be replace for 1
             // If there's already one employee, the ID of the new employee created will be the last employee ID + 1
             const newID = prev.length > 0 ? prev[prev.length - 1].id + 1 : 1;
             // Sets a new Employee into the Object (EmployeesObj)
-            const newEmployee: IndividualEmployee = {
+            const newEmployee: Employee = {
                 id: newID,
                 name: formValues.name,
                 date: new Date(formValues.date),
@@ -49,12 +49,12 @@ export default function AddEmployee({setEmployee}:{setEmployee:React.Dispatch<Re
             return [...prev, newEmployee];
         });
 
-        onClose();
+        setShowAdd(null);
     };
 
     return (
         <React.Fragment>
-        <Dialog open={true} onClose={onClose}>
+        <Dialog open={true} onClose={ () => setShowAdd(null) }>
             <DialogTitle>Add Employee</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit} id="addEmployee-form">
@@ -68,7 +68,7 @@ export default function AddEmployee({setEmployee}:{setEmployee:React.Dispatch<Re
                 <Button className="actionButton" type="submit" form="addEmployee-form">
                     Add
                 </Button>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={ () => setShowAdd(null) }>Cancel</Button>
             </DialogActions>
         </Dialog>
         </React.Fragment>

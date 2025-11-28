@@ -1,4 +1,4 @@
-import './NavBar.css';
+import '../page.css';
 
 // Page Header
 export default function NavBar() {

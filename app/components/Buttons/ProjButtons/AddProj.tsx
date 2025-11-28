@@ -4,16 +4,18 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormsText from '../Types/FormsText';
-import '../Forms.css';
-import { IndividualProject } from '../../../containers/Projects/Props';
-import { useNavigate } from 'react-router-dom';
 
-export default function AddProject({setProject}:{setProject: React.Dispatch<React.SetStateAction<IndividualProject[]>>}){
+// Forms
+import FormsText from '../../Forms/Types/FormsText';
+import { Project } from '@/app/page';
 
-    // Routing - Link doesn't work so Navigate is an alternative
-    const navigate = useNavigate();
-    const onClose = () => navigate("/projects");
+export default function AddProject({
+    setProjectAP, 
+    setShowAdd
+} : {
+    setProjectAP:React.Dispatch<React.SetStateAction<Project[]>>,
+    setShowAdd:React.Dispatch<React.SetStateAction<'Add' | 'Delete' | null>>
+}){
 
     // Initialization of Form values
     const [projectName, setProjectName] = useState("");
@@ -26,24 +28,24 @@ export default function AddProject({setProject}:{setProject: React.Dispatch<Reac
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        setProject(prev => {
+        setProjectAP(prev => {
             // I wanted the ID automatic so if the ID is the first one being introduced, the 0 (Default initial value) will be replace for 1
             // If there's already one project, the ID of the new project created will be the last project ID + 1
             const newID = prev.length > 0 ? prev[prev.length - 1].id + 1 : 1;
             // Sets a new Project into the Object (ProjectObj)
-            const newProject: IndividualProject = {
+            const newProject: Project = {
                 id: newID,
                 name: projectName,
             };
             return [...prev, newProject];
         });
 
-        onClose();
+        setShowAdd(null);
     };
 
     return (
         <React.Fragment>
-        <Dialog open={true} onClose={onClose}>
+        <Dialog open={true} onClose={ () => setShowAdd(null) }>
             <DialogTitle>Add Project</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit} id="addProject-form">
@@ -54,7 +56,7 @@ export default function AddProject({setProject}:{setProject: React.Dispatch<Reac
                 <Button className="actionButton" type="submit" form="addProject-form">
                     Add
                 </Button>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={ () => setShowAdd(null) }>Cancel</Button>
             </DialogActions>
         </Dialog>
         </React.Fragment>
