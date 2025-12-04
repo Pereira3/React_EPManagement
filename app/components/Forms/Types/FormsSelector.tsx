@@ -14,10 +14,10 @@ export default function FormsSelector ({value, onChange}:{value:string, onChange
                     onChange={(e) => onChange(e.target.value)}
                 >
                     <FormControlLabel value='None' control={<Radio />} label="(none selected)" />
-                    <FormControlLabel value="JE" control={<Radio />} label="Junior Engineer" />
-                    <FormControlLabel value="PM" control={<Radio />} label="Project Manager" />
-                    <FormControlLabel value="SE" control={<Radio />} label="Senior Engineer" />
-                    <FormControlLabel value="TM" control={<Radio />} label="Team Manager" />
+                    <FormControlLabel value="Junior Engineer" control={<Radio />} label="Junior Engineer" />
+                    <FormControlLabel value="Project Manager" control={<Radio />} label="Project Manager" />
+                    <FormControlLabel value="Senior Engineer" control={<Radio />} label="Senior Engineer" />
+                    <FormControlLabel value="Team Manager" control={<Radio />} label="Team Manager" />
                 </RadioGroup>
             </FormControl>
         </Box>

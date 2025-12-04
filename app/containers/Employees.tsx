@@ -14,7 +14,6 @@ import EmployeeTopButtons from '@/app/components/Buttons/EmployeeTopButtons';
 import { Employee } from '../page';
 
 // TODO: Project Button for Employees - Line 67
-// TODO: For Edition and Deletion features I've to implement the table click selection
 
 export default function Employees({
   lstEmployees, 
@@ -28,7 +27,7 @@ export default function Employees({
 
   return(
     <div className="mainArea">   
-      <EmployeeTopButtons setEmployeeTB={setEmployee} selectedEmp={selectedEmployee} />
+      <EmployeeTopButtons setEmployeeTB={setEmployee} selectedEmp={selectedEmployee} selectedEmployeeSetter={setSelectedEmployee} />
       {/** API Data */}
       <div className="data">
         <TableContainer component={Paper} className="TableContainer" >
@@ -44,7 +43,12 @@ export default function Employees({
             </TableHead>
             <TableBody className="TableBody">
               {lstEmployees.map((employee) => (
-                <TableRow className='TableRow' key={employee.name} onClick={() => setSelectedEmployee(employee)} >
+                <TableRow
+                  className="TableRow" 
+                  key={employee.id}
+                  selected={selectedEmployee?.id === employee.id}
+                  onClick={() => { setSelectedEmployee(employee); }}
+                >
                   <TableCell> {employee.name} </TableCell>
                   <TableCell align="center">{employee.date.toLocaleDateString('en-GB')}</TableCell>
                   <TableCell align="center">{employee.role}</TableCell>

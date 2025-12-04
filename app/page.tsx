@@ -12,18 +12,19 @@ import Projects from './containers/Projects';
 type dataType = "Employees" | "Projects";
 // Parameters for Each Employee
 export type Employee = {
-  id:number;
-  name:string;
-  date:Date;
-  role:string;
-  team:string;
+  id:number,
+  name:string,
+  date:Date,
+  role:string,
+  team:string,
+  allocation?:number;
 }
 // Parameters for Each Project
 export type Project = {
   id:number,
-  name:string,
+  name:string;
+  employees?:Employee[];
 }
-
 
 export default function Page() {
   // Management of Datatype (Employees / Projects)
@@ -71,7 +72,8 @@ const initialEmployees: Employee[] = [
 ];
 
 const initialProjects: Project[] = [
-  { id: 1, name: 'Project A' },
-  { id: 2, name: 'Project B' },
-  { id: 3, name: 'Project C' },
+  { id: 1, name: 'Technology' },
+  { id: 2, name: 'Energy' },
+  { id: 3, name: 'Humans' },
+  { id: 4, name: 'Nature' },
 ];

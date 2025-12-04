@@ -11,10 +11,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 // Importing Props
 import ProjectTopButtons from '@/app/components/Buttons/ProjectTopButtons';
+import Assignment from '../components/Buttons/ProjButtons/Assignment';
 import { Project } from '../page';
 
-// TODO: Employees Button for Projects - Line 56
-// TODO: For Edition and Deletion features I've to implement the table click selection
+// TODO: Understand in what situation does selectedProject is null when calling Assignment
 
 export default function Projects({
   lstProjects, 
@@ -25,10 +25,11 @@ export default function Projects({
 }){
 
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [assignment, setShowAssignment] = useState<boolean>(false);
 
   return(
     <div className="mainArea">
-      <ProjectTopButtons setProjectTB={setProject} selectedProj={selectedProject} />
+      <ProjectTopButtons setProjectTB={setProject} selectedProj={selectedProject} selectProjectSetter={setSelectedProject} />
       {/** API Data */}
       <div className="data">
         <TableContainer component={Paper} className="TableContainer" >
@@ -39,18 +40,25 @@ export default function Projects({
                 <TableCell className='tableColumn'></TableCell>
               </TableRow>
             </TableHead>
-            <TableBody className="TableBody">
+            <TableBody className="TableBody" >
               {lstProjects.map((project) => (
-                <TableRow className='TableRow' key={project.name} onClick={() => setSelectedProject(project)} >
-                  <TableCell>
-                    {project.name}
+                <TableRow 
+                  className='TableRow' 
+                  key={project.id}
+                  selected={selectedProject?.id === project.id} 
+                  onClick={() => setSelectedProject(project)}
+                >
+                  <TableCell>{project.name}</TableCell>
+                  <TableCell align="center">
+                    <button onClick={() => setShowAssignment(true)}>Employees</button>
                   </TableCell>
-                  <TableCell align="center">Employees</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+
+        {assignment && selectedProject && <Assignment project={selectedProject} setShowAssign={setShowAssignment} />}
       </div>
     </div>
   );

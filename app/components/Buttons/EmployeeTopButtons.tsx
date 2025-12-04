@@ -10,14 +10,14 @@ import EditEmp from './EmpButtons/EditEmp';
 import DeleteEmp from './EmpButtons/DeleteEmp';
 import { Employee } from '@/app/page';
 
-//TODO: Treat The exception of Edit and Delete where there's no Employee selected
-
 export default function EmployeeTopButtons({
     setEmployeeTB,
     selectedEmp,
+    selectedEmployeeSetter,
 } : {
     setEmployeeTB:React.Dispatch<React.SetStateAction<Employee[]>>,
     selectedEmp:Employee | null,
+    selectedEmployeeSetter:React.Dispatch<React.SetStateAction<Employee | null>>;
 }){
 
     const [action, setAction] = useState<'Add' | 'Edit' | 'Delete' | null>(null);
@@ -38,8 +38,8 @@ export default function EmployeeTopButtons({
             </button>
 
             {action === 'Add' && <AddEmp setEmployeeAE={setEmployeeTB} setShowAdd={setAction} />}
-            {action === 'Edit' && selectedEmp && (<EditEmp setEmployeeEE={setEmployeeTB} setShowEdit={setAction} employeeSelected={selectedEmp} />)}
-            {action === 'Delete' && <DeleteEmp setEmployeeDE={setEmployeeTB} setShowDelete={setAction} />}
+            {action === 'Edit' && <EditEmp setEmployeeEE={setEmployeeTB} setShowEdit={setAction} employeeSelected={selectedEmp} setSelectEmployee={selectedEmployeeSetter} />}
+            {action === 'Delete' && <DeleteEmp setEmployeeDE={setEmployeeTB} setShowDelete={setAction} employeeSelected={selectedEmp} setSelectEmployee={selectedEmployeeSetter} />}
 
         </div>
     );

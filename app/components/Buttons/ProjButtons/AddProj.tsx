@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-
 // Forms
 import FormsText from '../../Forms/Types/FormsText';
 import { Project } from '@/app/page';
+// Importing Style Sheet
+import '../../../page.css';
 
 export default function AddProject({
     setProjectAP, 
@@ -34,8 +34,8 @@ export default function AddProject({
             const newID = prev.length > 0 ? prev[prev.length - 1].id + 1 : 1;
             // Sets a new Project into the Object (ProjectObj)
             const newProject: Project = {
-                id: newID,
-                name: projectName,
+                id:newID,
+                name:projectName,
             };
             return [...prev, newProject];
         });
@@ -53,10 +53,10 @@ export default function AddProject({
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button className="actionButton" type="submit" form="addProject-form">
+                <button className="actionButton" type="submit" form="addProject-form">
                     Add
-                </Button>
-                <Button onClick={ () => setShowAdd(null) }>Cancel</Button>
+                </button>
+                <button onClick={ () => setShowAdd(null) }>Cancel</button>
             </DialogActions>
         </Dialog>
         </React.Fragment>

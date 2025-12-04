@@ -1,6 +1,5 @@
 // ----- IMPORTS -----
 import React, {useState} from 'react';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,6 +9,8 @@ import FormsDate from '../../Forms/Types/FormsDate';
 import FormsSelector from '../../Forms/Types/FormsSelector';
 import FormsDropdown from '../../Forms/Types/FormsDropdown';
 import { Employee } from '@/app/page';
+// Importing Style Sheet
+import '../../../page.css';
 
 export default function AddEmp({
     setEmployeeAE, 
@@ -44,7 +45,7 @@ export default function AddEmp({
                 name: formValues.name,
                 date: new Date(formValues.date),
                 role: formValues.role,
-                team: formValues.team
+                team: formValues.team,
             };
             return [...prev, newEmployee];
         });
@@ -65,10 +66,10 @@ export default function AddEmp({
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button className="actionButton" type="submit" form="addEmployee-form">
+                <button className="actionButton" type="submit" form="addEmployee-form">
                     Add
-                </Button>
-                <Button onClick={ () => setShowAdd(null) }>Cancel</Button>
+                </button>
+                <button onClick={ () => setShowAdd(null) }>Cancel</button>
             </DialogActions>
         </Dialog>
         </React.Fragment>

@@ -11,9 +11,11 @@ import { Project } from '@/app/page';
 export default function ProjectTopButtons({
     setProjectTB,
     selectedProj,
+    selectProjectSetter,
 } : {
-    setProjectTB:React.Dispatch<React.SetStateAction<Project[]>>
+    setProjectTB:React.Dispatch<React.SetStateAction<Project[]>>,
     selectedProj:Project | null,
+    selectProjectSetter:React.Dispatch<React.SetStateAction<Project | null>>;
 }){
 
     const [action, setAction] = useState<'Add' | 'Delete' | null>(null);
@@ -24,13 +26,13 @@ export default function ProjectTopButtons({
                 <AddOutlinedIcon />
                 <span>Add</span>
             </button>
-            <button onClick={() => setAction('Delete')}>
+            <button onClick={() => setAction('Delete')} >
                 <RemoveOutlinedIcon />
                 <span>Delete</span>
             </button>
 
             {action === 'Add' && <AddProj setProjectAP={setProjectTB} setShowAdd={setAction} />}
-            {action === 'Delete' && selectedProj && (<DeleteProj setProjectDP={setProjectTB} setShowDelete={setAction} projectSelected={selectedProj} />)}
+            {action === 'Delete' && <DeleteProj setProjectDP={setProjectTB} setShowDelete={setAction} projectSelected={selectedProj} setSelectProject={selectProjectSetter}  />}
         </div>
     );
 }
