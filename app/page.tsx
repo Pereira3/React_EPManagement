@@ -14,16 +14,15 @@ type dataType = "Employees" | "Projects";
 export type Employee = {
   id:number,
   name:string,
-  date:Date,
+  date:string,
   role:string,
   team:string,
-  allocation?:number;
 }
 // Parameters for Each Project
 export type Project = {
   id:number,
-  name:string;
-  employees?:Employee[];
+  name:string,
+  employees?:[number, number][];
 }
 
 export default function Page() {
@@ -45,7 +44,9 @@ export default function Page() {
         <button className='topButton' disabled={disabled === 0} onClick={() => {handleDisablement(0); setType("Employees")}}>Employees</button> | {" "}
         <button className='topButton' disabled={disabled === 1} onClick={() => {handleDisablement(1); setType("Projects")}}>Projects</button>
 
-        {type === "Employees"  ? <Employees lstEmployees={employees} setEmployee={setEmp} /> : <Projects lstProjects={projects} setProject={setProj} />}
+        {type === "Employees"
+        ? <Employees lstEmployees={employees} setEmployee={setEmp} />
+        : <Projects lstProjects={projects} setProject={setProj} />}
       </main>
     </>
   );
@@ -54,26 +55,25 @@ export default function Page() {
 
 // ----- POPULATE TABLES -----
 const initialEmployees: Employee[] = [
-  { id: 1, name: 'Alice Johnson', date: new Date('2023-01-15'), role: 'Junior Engineer', team: 'Team A' },
-  { id: 2, name: 'Bob Smith', date: new Date('2022-11-03'), role: 'Senior Engineer', team: 'Team C' },
-  { id: 3, name: 'Charlie Brown', date: new Date('2021-07-22'), role: 'Project Manager', team: 'Team C' },
-  { id: 4, name: 'Diana Prince', date: new Date('2023-05-10'), role: 'Junior Engineer', team: 'Team D' },
-  { id: 5, name: 'Ethan Hunt', date: new Date('2020-09-30'), role: 'Team Manager', team: 'Team A' },
-  { id: 6, name: 'Fiona Davis', date: new Date('2024-02-18'), role: 'Senior Engineer', team: 'Team B' },
-  { id: 7, name: 'George Miller', date: new Date('2023-12-01'), role: 'Team Manager', team: 'Team D' },
-  { id: 8, name: 'Hannah Lee', date: new Date('2017-08-14'), role: 'Junior Engineer', team: 'Team B' },
-  { id: 9, name: 'Ian Carter', date: new Date('2013-03-19'), role: 'Junior Engineer', team: 'Team A' },
-  { id: 10, name: 'Julia Roberts', date: new Date('2018-06-25'), role: 'Senior Engineer', team: 'Team D' },
-  { id: 11, name: 'Kevin Turner', date: new Date('2020-12-11'), role: 'Team Manager', team: 'Team C' },
-  { id: 12, name: 'Laura Green', date: new Date('2003-01-05'), role: 'Junior Engineer', team: 'Team B' },
-  { id: 13, name: 'Michael Adams', date: new Date('2012-09-30'), role: 'Senior Engineer', team: 'Team A' },
-  { id: 14, name: 'Natalie Brooks', date: new Date('2018-11-17'), role: 'Project Manager', team: 'Team D' },
-  { id: 15, name: 'Oliver White', date: new Date('2019-04-02'), role: 'Junior Engineer', team: 'Team C' },
+  { id: 123, name: 'Alice Johnson', date: '15-01-2023', role: 'Junior Engineer', team: 'Team A' },
+  { id: 654, name: 'Bob Smith', date: '03-11-2022', role: 'Senior Engineer', team: 'Team C' },
+  { id: 176, name: 'Charlie Brown', date: '22-07-2021', role: 'Project Manager', team: 'Team C' },
+  { id: 40, name: 'Diana Prince', date: '10-05-2023', role: 'Junior Engineer', team: 'Team D' },
+  { id: 7, name: 'Ethan Hunt', date: '30-09-2020', role: 'Team Manager', team: 'Team A' },
+  { id: 287, name: 'Fiona Davis', date: '18-02-2024', role: 'Senior Engineer', team: 'Team B' },
+  { id: 823, name: 'George Miller', date: '01-12-2023', role: 'Team Manager', team: 'Team D' },
+  { id: 473, name: 'Hannah Lee', date: '14-08-2017', role: 'Junior Engineer', team: 'Team B' },
+  { id: 612, name: 'Ian Carter', date: '19-03-2013', role: 'Junior Engineer', team: 'Team A' },
+  { id: 942, name: 'Julia Roberts', date: '25-06-2018', role: 'Senior Engineer', team: 'Team D' },
+  { id: 341, name: 'Kevin Turner', date: '11-12-2020', role: 'Team Manager', team: 'Team C' },
+  { id: 32, name: 'Laura Green', date: '05-01-2003', role: 'Junior Engineer', team: 'Team B' },
+  { id: 70, name: 'Michael Adams', date: '30-09-2012', role: 'Senior Engineer', team: 'Team A' },
+  { id: 745, name: 'Natalie Brooks', date: '17-11-2018', role: 'Project Manager', team: 'Team D' },
+  { id: 92, name: 'Oliver White', date: '02-04-2019', role: 'Junior Engineer', team: 'Team C' },
 ];
-
 const initialProjects: Project[] = [
-  { id: 1, name: 'Technology' },
-  { id: 2, name: 'Energy' },
-  { id: 3, name: 'Humans' },
+  { id: 32, name: 'Technology', employees:[[176, 20]]},
+  { id: 41, name: 'Energy' },
+  { id: 18, name: 'Humans' },
   { id: 4, name: 'Nature' },
 ];

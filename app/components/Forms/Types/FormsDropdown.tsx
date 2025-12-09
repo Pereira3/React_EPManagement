@@ -12,7 +12,7 @@ const teamsAvailable = [
     'Team D',
 ]
 
-export default function FormsDropdown({value, onChange} : {value:string, onChange: (val:string) => void}) {
+export default function FormsDropdown({value, updt} : {value:string, updt:(val:string) => void}) {
     return(
         <Box sx={{ display: 'flex', alignItems: 'center', gap:'15px'}}>
             <span>Team: </span>
@@ -20,7 +20,7 @@ export default function FormsDropdown({value, onChange} : {value:string, onChang
                 autoComplete='false'
                 id="team"
                 value={value}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={(e) => updt(e.target.value)}
                 input={<OutlinedInput/>}
             >
                 {teamsAvailable.map((team) => (

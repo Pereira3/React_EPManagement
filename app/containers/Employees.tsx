@@ -22,9 +22,7 @@ export default function Employees({
   lstEmployees: Employee[];
   setEmployee: React.Dispatch<React.SetStateAction<Employee[]>>;
 }){
-  
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-
   return(
     <div className="mainArea">   
       <EmployeeTopButtons setEmployeeTB={setEmployee} selectedEmp={selectedEmployee} selectedEmployeeSetter={setSelectedEmployee} />
@@ -50,7 +48,7 @@ export default function Employees({
                   onClick={() => { setSelectedEmployee(employee); }}
                 >
                   <TableCell> {employee.name} </TableCell>
-                  <TableCell align="center">{employee.date.toLocaleDateString('en-GB')}</TableCell>
+                  <TableCell align="center">{employee.date}</TableCell>
                   <TableCell align="center">{employee.role}</TableCell>
                   <TableCell align="center">{employee.team}</TableCell>
                   <TableCell align="center">Projects</TableCell>

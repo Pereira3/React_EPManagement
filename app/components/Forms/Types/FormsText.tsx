@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-export default function FormsText ({value, onChange }: {value: string; onChange: (val: string) => void }){
+export default function FormsText ({value, updt }: {value: string; updt: (val: string) => void }){
     
     return(
         <Box sx={{ display: 'flex', alignItems: 'center', gap:'15px'}}>
@@ -13,7 +13,7 @@ export default function FormsText ({value, onChange }: {value: string; onChange:
                 margin="normal"
                 name="name"
                 value={value}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={(e) => updt(e.target.value)}
                 type="text"
             />
         </Box>

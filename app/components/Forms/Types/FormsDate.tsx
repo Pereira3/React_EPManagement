@@ -1,22 +1,26 @@
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import dayjs, { Dayjs } from 'dayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import 'dayjs/locale/en-gb';
 
-//TODO: Treat Exceptions for Under 2500 years and add more bits
-
-export default function FormsDate({value, onChange}:{value:string, onChange: (val:string) => void}){
+export default function FormsDate({value, updt}:{value:Dayjs, updt: (val: string) => void}){
+    
     return(
         <Box sx={{ display: 'flex', alignItems: 'center', gap:'15px'}}>
             <span>Date: </span>
-            <TextField
-                autoFocus
-                autoComplete='false'
-                required
-                margin="normal"
-                id="startDate"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                type="date"
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                <DatePicker
+                    autoFocus
+                    minDate={dayjs('1903-01-01')}
+                    maxDate={dayjs()}
+                    value={value}
+                    onChange={(e) => (e !== null ? updt(e.format("DD-MM-YYYY")) : '')}
+                    slotProps={{
+                        textField:{required:true}
+                    }}
+                />
+            </LocalizationProvider>
         </Box>
     )
 }

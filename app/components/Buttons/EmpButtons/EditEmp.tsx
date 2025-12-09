@@ -9,6 +9,7 @@ import FormsDate from '../../Forms/Types/FormsDate';
 import FormsSelector from '../../Forms/Types/FormsSelector';
 import FormsDropdown from '../../Forms/Types/FormsDropdown';
 import { Employee } from '@/app/page';
+import dayjs from 'dayjs';
 // Importing Style Sheet
 import '../../../page.css';
 
@@ -28,11 +29,11 @@ export default function EditEmp({
 
         const [formValues, setFormValues] = useState({
             name: employeeSelected.name,
-            date: employeeSelected.date.toISOString().split('T')[0],
+            date: dayjs(employeeSelected.date, "DD-MM-YYYY"),
             role: employeeSelected.role,
             team: employeeSelected.team,
         });
-    
+
         const handleChange = (field: string, value: string) => {
             setFormValues(prev => ({ ...prev, [field]: value }));
         };
@@ -41,12 +42,14 @@ export default function EditEmp({
         const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
+            const dateFormatted = formValues.date.format("DD-MM-YYYY");
+
             setEmployeeEE(prev => {
                 return prev.map(employee =>
                     employee.id === employeeSelected.id ? {
                         ...employee,
                         name: formValues.name,
-                        date: new Date(formValues.date),
+                        date: dateFormatted,
                         role: formValues.role,
                         team: formValues.team,
                     }
@@ -63,10 +66,10 @@ export default function EditEmp({
                 <DialogTitle>Edit Employee</DialogTitle>
                 <DialogContent>
                     <form onSubmit={handleSubmit} id="editEmployee-form">
-                        <FormsText value={formValues.name} onChange={val => handleChange('name', val)} />
-                        <FormsDate value={formValues.date} onChange={val => handleChange('date', val)} />
-                        <FormsSelector value={formValues.role} onChange={val => handleChange('role', val)} />
-                        <FormsDropdown value={formValues.team} onChange={val => handleChange('team', val)} />
+                        <FormsText value={formValues.name} updt={val => handleChange('name', val)} />
+                        <FormsDate value={formValues.date} updt={(value) => handleChange("date", value)} />
+                        <FormsSelector value={formValues.role} updt={val => handleChange('role', val)} />
+                        <FormsDropdown value={formValues.team} updt={val => handleChange('team', val)} />
                     </form>
                 </DialogContent>
                 <DialogActions>

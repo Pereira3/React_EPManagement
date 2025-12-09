@@ -9,7 +9,7 @@ import FormsDate from '../../Forms/Types/FormsDate';
 import FormsSelector from '../../Forms/Types/FormsSelector';
 import FormsDropdown from '../../Forms/Types/FormsDropdown';
 import { Employee } from '@/app/page';
-// Importing Style Sheet
+import dayjs, { Dayjs } from "dayjs";
 import '../../../page.css';
 
 export default function AddEmp({
@@ -19,15 +19,19 @@ export default function AddEmp({
     setEmployeeAE:React.Dispatch<React.SetStateAction<Employee[]>>,
     setShowAdd:React.Dispatch<React.SetStateAction<'Add' | 'Edit' | 'Delete' | null>>
 }){
-    // Initialization of Form values
-    const [formValues, setFormValues] = useState({
-        name: "",
-        date: "",
-        role: 'None',
-        team: 'Not Defined'
-    });
     
-    // Loads the values for the setter based on the field called on lines 64-67 ("name" - "team")
+    const [formValues, setFormValues] = useState<{
+        name: string;
+        date: Dayjs;
+        role: string;
+        team: string;
+    }>({
+        name: "",
+        date: dayjs(),
+        role: "None",
+        team: "Not Defined",
+    });
+
     const handleChange = (field: string, value: string) => {
         setFormValues(prev => ({ ...prev, [field]: value }));
     };
@@ -35,19 +39,20 @@ export default function AddEmp({
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        setEmployeeAE(prev => {
-            // I wanted the ID automatic so if the ID is the first one being introduced, the 0 (Default initial value) will be replace for 1
-            // If there's already one employee, the ID of the new employee created will be the last employee ID + 1
-            const newID = prev.length > 0 ? prev[prev.length - 1].id + 1 : 1;
-            // Sets a new Employee into the Object (EmployeesObj)
-            const newEmployee: Employee = {
+        const dateFormatted = formValues.date.format("DD-MM-YYYY");
+
+        setEmployeeAE(employees => {
+
+            const newID = generatingID(employees); 
+            
+            const newEmployee:Employee = {
                 id: newID,
                 name: formValues.name,
-                date: new Date(formValues.date),
+                date: dateFormatted,
                 role: formValues.role,
                 team: formValues.team,
             };
-            return [...prev, newEmployee];
+            return [...employees, newEmployee];
         });
 
         setShowAdd(null);
@@ -59,10 +64,10 @@ export default function AddEmp({
             <DialogTitle>Add Employee</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit} id="addEmployee-form">
-                    <FormsText value={formValues.name} onChange={(value) => handleChange("name", value)} />
-                    <FormsDate value={formValues.date} onChange={(value) => handleChange("date", value)} />
-                    <FormsSelector value={formValues.role} onChange={(value) => handleChange("role", value)} />
-                    <FormsDropdown value={formValues.team} onChange={(value) => handleChange("team", value)} />
+                    <FormsText value={formValues.name} updt={(val) => handleChange("name", val)} />
+                    <FormsDate value={formValues.date} updt={(val) => handleChange("date", val)} />
+                    <FormsSelector value={formValues.role} updt={(val) => handleChange("role", val)} />
+                    <FormsDropdown value={formValues.team} updt={(val) => handleChange("team", val)} />
                 </form>
             </DialogContent>
             <DialogActions>
@@ -74,4 +79,15 @@ export default function AddEmp({
         </Dialog>
         </React.Fragment>
     );
+}
+
+function generatingID(employees:Employee[]){
+
+    let randomID = Math.floor(Math.random() * 1000);
+
+    if( employees.some((emp) => emp.id === randomID) ){
+        return generatingID(employees);
+    }else{
+        return randomID;
+    }
 }

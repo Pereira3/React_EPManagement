@@ -3,15 +3,16 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import { StringifyOptions } from 'querystring';
 
-export default function FormsSelector ({value, onChange}:{value:string, onChange: (val:string) => void}){
+export default function FormsSelector ({value, updt}:{value:string, updt: (val: string) => void}){
     return(
         <Box sx={{ display: 'flex', gap:'15px'}}>
             <span>Role: </span>
             <FormControl>
                 <RadioGroup
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={(e) => updt(e.target.value)}
                 >
                     <FormControlLabel value='None' control={<Radio />} label="(none selected)" />
                     <FormControlLabel value="Junior Engineer" control={<Radio />} label="Junior Engineer" />

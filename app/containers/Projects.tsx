@@ -11,16 +11,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 // Importing Props
 import ProjectTopButtons from '@/app/components/Buttons/ProjectTopButtons';
-import Assignment from '../components/Buttons/ProjButtons/Assignment';
+import Connections from './Connections';
 import { Project } from '../page';
 
 // TODO: Understand in what situation does selectedProject is null when calling Assignment
 
 export default function Projects({
-  lstProjects, 
+  lstProjects,
   setProject
 } : {
-  lstProjects: Project[];
+  lstProjects:Project[],
   setProject: React.Dispatch<React.SetStateAction<Project[]>>;
 }){
 
@@ -58,7 +58,7 @@ export default function Projects({
           </Table>
         </TableContainer>
 
-        {assignment && selectedProject && <Assignment project={selectedProject} setShowAssign={setShowAssignment} />}
+        {assignment && selectedProject && <Connections project={selectedProject} setShowAssign={setShowAssignment} />}
       </div>
     </div>
   );

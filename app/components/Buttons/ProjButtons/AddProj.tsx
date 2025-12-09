@@ -28,16 +28,15 @@ export default function AddProject({
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        setProjectAP(prev => {
-            // I wanted the ID automatic so if the ID is the first one being introduced, the 0 (Default initial value) will be replace for 1
-            // If there's already one project, the ID of the new project created will be the last project ID + 1
-            const newID = prev.length > 0 ? prev[prev.length - 1].id + 1 : 1;
-            // Sets a new Project into the Object (ProjectObj)
+        setProjectAP(projects => {
+            
+            const newID = generatingID(projects);
+
             const newProject: Project = {
                 id:newID,
                 name:projectName,
             };
-            return [...prev, newProject];
+            return [...projects, newProject];
         });
 
         setShowAdd(null);
@@ -49,7 +48,7 @@ export default function AddProject({
             <DialogTitle>Add Project</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit} id="addProject-form">
-                    <FormsText value={projectName} onChange={(val) => handleChange(val)} />
+                    <FormsText value={projectName} updt={(val) => handleChange(val)} />
                 </form>
             </DialogContent>
             <DialogActions>
@@ -61,4 +60,15 @@ export default function AddProject({
         </Dialog>
         </React.Fragment>
     );
+}
+
+function generatingID(projects:Project[]){
+
+    let randomID = Math.floor(Math.random() * 50);
+
+    if( projects.some((proj) => proj.id === randomID) ){
+        return generatingID(projects);
+    }else{
+        return randomID;
+    }
 }
