@@ -4,31 +4,23 @@ import Select from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import { MenuItem } from '@mui/material';
 
-const teamsAvailable = [
-    'Not Defined',
-    'Team A',
-    'Team B',
-    'Team C',
-    'Team D',
-]
-
-export default function FormsDropdown({value, updt} : {value:string, updt:(val:string) => void}) {
+export default function FormsDropdown({sets, setName, value, updt}:{sets:string[], setName?:string, value:string, updt: (val:string) => void}) {
     return(
         <Box sx={{ display: 'flex', alignItems: 'center', gap:'15px'}}>
-            <span>Team: </span>
+            {setName ? <span>{setName}: </span> : null}
             <Select
                 autoComplete='false'
-                id="team"
+                id="set"
                 value={value}
                 onChange={(e) => updt(e.target.value)}
                 input={<OutlinedInput/>}
             >
-                {teamsAvailable.map((team) => (
+                {sets?.map((data) => (
                     <MenuItem
-                        key={team}
-                        value={team}
+                        key={data}
+                        value={data}
                     >
-                        {team}
+                        {data}
                     </MenuItem>
                 ))}
             </Select>

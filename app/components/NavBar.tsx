@@ -1,5 +1,3 @@
-import '../page.css';
-
 // Page Header
 export default function NavBar() {
     return (

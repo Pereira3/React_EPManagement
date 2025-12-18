@@ -10,6 +10,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-rc.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.5",
@@ -27,7 +28,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "baseline-browser-mapping": "^2.9.2",
+    "baseline-browser-mapping": "^2.9.6",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "husky": "^9.1.7",

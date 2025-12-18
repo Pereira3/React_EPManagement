@@ -1,15 +1,16 @@
-@import "tailwindcss";  
+@import "tailwindcss";
 
 html {
   background: rgb(235, 235, 235);
   color: black;
+  overflow-y: hidden;
 }
 
-nav{
-    background: rgb(157, 0, 0);
-    padding: 20px;
-    color: rgb(235, 235, 235);
-    font-size: xx-large;
+nav {
+  background: rgb(157, 0, 0);
+  padding: 20px;
+  color: rgb(235, 235, 235);
+  font-size: xx-large;
 }
 
 main {
@@ -29,7 +30,7 @@ main {
 .mainArea {
   padding: 1%;
 }
-.data{
+.data {
   padding-top: 1%;
 }
 .actionButton {
@@ -39,7 +40,7 @@ main {
   border-color: black;
   color: azure;
 }
-button:not(.actionButton){
+button:not(.actionButton) {
   color: rgb(70, 70, 255);
   text-decoration: underline rgb(70, 70, 255);
 }
@@ -52,28 +53,54 @@ button:not(.actionButton){
 }
 
 .TableContainer {
-  max-height: 450px;
-  overflow-y: scroll;
+  max-height: calc(100vh - 275px);
+  overflow-y: auto;
   border-left: none;
   border-right: none;
+  th {
+    border-bottom: 2px solid black;
+    background-color: rgb(180, 180, 180);
+  }
+  td {
+    cursor: pointer;
+    border-bottom: 2px solid black;
+    background-color: rgb(230, 230, 230);
+  }
+  .MuiTableRow-root:hover td {
+    background-color: rgba(157, 0, 0, 0.3);
+  }
+  .MuiTableRow-root.Mui-selected td {
+    background-color: white;
+  }
+  .MuiTableRow-root.Mui-selected:hover td {
+    background-color: rgba(157, 0, 0, 0.15);
+  }
 }
-.TableHead .MuiTableCell-root {
-  border-bottom: 2px solid black;
-  background-color: rgb(180, 180, 180);
+
+.TableConnectionsContainer {
+  border: 2px solid;
+  th {
+    background-color: rgb(180, 180, 180);
+    border: 1px solid;
+    border-bottom: none;
+    border-top: none;
+  }
+  td {
+    border: 1px solid;
+    border-bottom: none;
+    border-top: none;
+  }
+  .MuiTableRow-root:hover:not(.LastRow) td {
+    background-color: rgba(157, 0, 0, 0.3);
+  }
+  .MuiTableRow-root.Mui-selected:not(.LastRow) td {
+    background-color: white;
+  }
+  .MuiTableRow-root.Mui-selected:hover:not(.LastRow) td {
+    background-color: rgba(157, 0, 0, 0.15);
+  }
 }
-.TableBody .MuiTableCell-root {
-  border-bottom: 2px solid black;
-}
-.TableRow.MuiTableRow-root {
-  cursor: pointer;
-  background-color: rgb(230, 230, 230);
-}
-.TableRow.MuiTableRow-root:hover {
-  background-color: rgba(157, 0, 0, 0.30);
-}
-.TableRow.MuiTableRow-root.Mui-selected {
-  background-color: white;
-}
-.TableRow.MuiTableRow-root.Mui-selected:hover {
-  background-color: rgba(157, 0, 0, 0.15);
+
+.MuiDialogContent-root .MuiDialogContentText-root {
+  color: rgba(157, 0, 0);
 }
