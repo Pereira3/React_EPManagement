@@ -1,20 +1,20 @@
-import { useState } from 'react';
+import { useState } from "react";
 // Importing Table
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 // Importing Icons
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 // Importing Types
-import { Project, Employee, actionsProj } from "../types";
+import { Project, Employee, actionsProj } from "../shared/types";
 // Importing Components
-import Connections from './Connections';
-import ProjectsButton from '../components/Buttons/ProjectsButton';
+import Connections from "./Connections";
+import ProjectsButton from "../components/Buttons/Projects/ProjectsButton";
 
 // TODO: Missing sort feature
 
@@ -22,12 +22,11 @@ export default function Projects({
   lstProjects,
   setProjects,
   allEmployees,
-} : {
-  lstProjects:Project[],
+}: {
+  lstProjects: Project[];
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
-  allEmployees:Employee[];
-}){
-
+  allEmployees: Employee[];
+}) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [assignment, setShowAssignment] = useState<boolean>(false);
   const [action, setAction] = useState<actionsProj>(null);
@@ -78,6 +77,7 @@ export default function Projects({
             setProjects={setProjects}
             project={selectedProject}
             setShowAssign={setShowAssignment}
+            listProjects={lstProjects}
             listEmployees={allEmployees}
           />
         )}
@@ -88,12 +88,12 @@ export default function Projects({
 
 function managementButtonsProj(
   action: actionsProj,
-  setAction:React.Dispatch<React.SetStateAction<actionsProj>>,
-  setProjects:React.Dispatch<React.SetStateAction<Project[]>>,
-  selectedProj:Project | null,
-  selectProjectSetter:React.Dispatch<React.SetStateAction<Project | null>>,
-  lstProjects:Project[],
-){
+  setAction: React.Dispatch<React.SetStateAction<actionsProj>>,
+  setProjects: React.Dispatch<React.SetStateAction<Project[]>>,
+  selectedProj: Project | null,
+  selectProjectSetter: React.Dispatch<React.SetStateAction<Project | null>>,
+  lstProjects: Project[]
+) {
   return (
     <div className="managementButtons">
       <button onClick={() => setAction("Add")}>

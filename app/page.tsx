@@ -1,14 +1,13 @@
 "use client";
 // ---------- IMPORTS ----------
 import { useState } from "react";
-import { dataType, Employee, Project } from "./types";
+import { dataType, Employee, Project } from "./shared/types";
 // Importing Components
 import NavBar from "./components/NavBar";
 import Employees from "./containers/Employees";
 import Projects from "./containers/Projects";
 
 //TODO: Explore useEffect function for setters instead of multiple passing of props
-//TODO: Separate field Validations from the Field Components
 //TODO: Explore the ideia of separating css files and type files into folders
 //TODO: Use of files for functions
 //TODO: Review CSS and the type of sizes used

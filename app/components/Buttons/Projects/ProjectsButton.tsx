@@ -1,12 +1,12 @@
 // ----- IMPORTS -----
-import React, { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormsText from "../Forms/FormsText";
-import { actionsProj, Project } from "@/app/types";
+import { actionsProj, Project } from "@/app/shared/types";
 import { DialogContentText } from "@mui/material";
+import Forms from "@/app/components/Forms/Forms";
+import { projectButtonsLogic } from "./projectButtonsLogic";
 
 export default function ProjectButton({
   action,
@@ -23,61 +23,14 @@ export default function ProjectButton({
   projectSelected: Project | null;
   setSelectProject: React.Dispatch<React.SetStateAction<Project | null>>;
 }) {
-  // For error handling
-  const [errorMessage, setError] = useState<string>("");
-  const [errorNumber, setErrorNumber] = useState<number>(0);
-  const [projectName, setProjectName] = useState("");
-
-  // Update form values when an action is defined (Button pressed)
-  useEffect(() => {
-    if (action === "Add") {
-      setProjectName("");
-      setError("");
-      setErrorNumber(0);
-    }
-  }, [action]);
-
-  const handleChange = (name: string) => {
-    setProjectName(name);
-  };
-
-  // ---------- Handler for the addition of a project ----------
-  const handleAddSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Check for duplicates
-    if (
-      !lstProjects.some(
-        (project) =>
-          project.name.trim().toUpperCase() === projectName.trim().toUpperCase()
-      )
-    ) {
-      setProjects((projects) => {
-        const newProject: Project = {
-          name: projectName,
-        };
-        return [...projects, newProject];
-      });
-      setAction(null);
-    } else {
-      setError("Project already in Database");
-      setErrorNumber(errorNumber + 1);
-    }
-  };
-
-  // ---------- Handler for the deletion of a project ----------
-  const handleDelete = () => {
-    if (projectSelected) {
-      setProjects((prev) => {
-        return prev.filter(
-          (project) =>
-            project.name.trim().toUpperCase() !==
-            projectSelected.name.trim().toUpperCase()
-        );
-      });
-      setAction(null);
-      setSelectProject(null);
-    }
-  };
+  const logic = projectButtonsLogic(
+    action,
+    lstProjects,
+    setProjects,
+    setAction,
+    projectSelected,
+    setSelectProject
+  );
 
   if (!action) return null;
 
@@ -92,17 +45,17 @@ export default function ProjectButton({
       >
         <DialogTitle>Add Project</DialogTitle>
         <DialogContent>
-          {errorMessage && (
+          {logic.errorMessage && (
             <DialogContentText>
-              {errorMessage + " (" + errorNumber + ")"}
+              {logic.errorMessage + " (" + logic.errorNumber + ")"}
             </DialogContentText>
           )}
-          <form onSubmit={handleAddSubmit} id="addProject-form">
-            <FormsText
-              type="text"
+          <form onSubmit={logic.handleAddSubmit} id="addProject-form">
+            <Forms
+              forms="text"
               setName="Name"
-              value={projectName}
-              updt={(val) => handleChange(val)}
+              value={logic.projectName}
+              updt={(val) => logic.handleChange(val)}
             />
           </form>
         </DialogContent>
@@ -140,7 +93,7 @@ export default function ProjectButton({
             allocated to it?
           </DialogContent>
           <DialogActions>
-            <button className="actionButton" onClick={handleDelete}>
+            <button className="actionButton" onClick={logic.handleDelete}>
               Delete
             </button>
             <button onClick={() => setAction(null)}>Cancel</button>

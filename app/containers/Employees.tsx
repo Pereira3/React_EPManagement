@@ -11,9 +11,9 @@ import Paper from "@mui/material/Paper";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import EmployeeButton from "../components/Buttons/EmployeesButton";
+import EmployeeButton from "../components/Buttons/Employees/EmployeesButton";
 // Importing Types
-import { actionsEmp, Employee } from "@/app/types";
+import { actionsEmp, Employee } from "@/app/shared/types";
 
 // TODO: Project Button for Employees - Line 67
 // TODO: Missing sort feature
