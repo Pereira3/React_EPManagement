@@ -3,36 +3,18 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { actionsProj, Project } from "@/app/shared/types";
 import { DialogContentText } from "@mui/material";
 import Forms from "@/app/components/Forms/Forms";
-import { projectButtonsLogic } from "./projectButtonsLogic";
+import { useSetters } from "@/app/context/Setters";
+import { useProjectButtonsLogic } from "./useProjectButtonsLogic";
 
-export default function ProjectButton({
-  action,
-  lstProjects,
-  setProjects,
-  setAction,
-  projectSelected,
-  setSelectProject,
-}: {
-  action: actionsProj;
-  lstProjects: Project[];
-  setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
-  setAction: React.Dispatch<React.SetStateAction<actionsProj>>;
-  projectSelected: Project | null;
-  setSelectProject: React.Dispatch<React.SetStateAction<Project | null>>;
-}) {
-  const logic = projectButtonsLogic(
-    action,
-    lstProjects,
-    setProjects,
-    setAction,
-    projectSelected,
-    setSelectProject
-  );
+export default function ProjectButton() {
 
-  if (!action) return null;
+  const { selectedProject, setSelectedProject, action, setAction } = useSetters();
+  
+  const logic = useProjectButtonsLogic();
+
+  if (!action) return "None";
 
   // ---------- ADD ----------
   if (action === "Add") {
@@ -40,7 +22,7 @@ export default function ProjectButton({
       <Dialog
         open={true}
         onClose={() => {
-          setAction(null);
+          setAction("None");
         }}
       >
         <DialogTitle>Add Project</DialogTitle>
@@ -65,7 +47,7 @@ export default function ProjectButton({
           </button>
           <button
             onClick={() => {
-              setAction(null);
+              setAction("None");
             }}
           >
             Cancel
@@ -77,38 +59,38 @@ export default function ProjectButton({
 
   // ---------- DELETE ----------
   if (action === "Delete") {
-    if (projectSelected) {
+    if (selectedProject) {
       return (
         <Dialog
           open={true}
           onClose={() => {
-            setAction(null);
-            setSelectProject(null);
+            setAction("None");
+            setSelectedProject(null);
           }}
         >
           <DialogTitle>Delete Project</DialogTitle>
           <DialogContent>
             Are you sure you want to delete Project{" "}
-            <strong>{projectSelected.name}</strong> and all the employees
+            <strong>{selectedProject.name}</strong> and all the employees
             allocated to it?
           </DialogContent>
           <DialogActions>
             <button className="actionButton" onClick={logic.handleDelete}>
               Delete
             </button>
-            <button onClick={() => setAction(null)}>Cancel</button>
+            <button onClick={() => setAction("None")}>Cancel</button>
           </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open={true} onClose={() => setAction(null)}>
+        <Dialog open={true} onClose={() => setAction("None")}>
           <DialogTitle>Project Not Selected</DialogTitle>
           <DialogContent>
             You have to select one project to be able to delete it.
           </DialogContent>
           <DialogActions>
-            <button className="actionButton" onClick={() => setAction(null)}>
+            <button className="actionButton" onClick={() => setAction("None")}>
               OK
             </button>
           </DialogActions>

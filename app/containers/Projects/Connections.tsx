@@ -1,4 +1,3 @@
-import { Employee, Project } from "@/app/shared/types";
 import {
   Dialog,
   DialogActions,
@@ -14,68 +13,35 @@ import {
 } from "@mui/material";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import { useState } from "react";
-import Forms from "../components/Forms/Forms";
-import { validateConnectionSubmit } from "../components/Forms/formsValidation";
+import Forms from "../../components/Forms/Forms";
+import { useSetters } from "../../context/Setters";
+import {
+  detachEmployee,
+  getProjectEmployeesList,
+  handleAttachEmployee,
+} from "./ConnectionsFunctions";
 
-export default function Connections({
-  project,
-  setShowAssign,
-  setProjects,
-  listProjects,
-  listEmployees,
-}: {
-  project: Project;
-  setShowAssign: React.Dispatch<React.SetStateAction<boolean>>;
-  setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
-  listProjects: Project[];
-  listEmployees: Employee[];
-}) {
+export default function Connections() {
+  const {
+    lstofEmployees,
+    lstofProjects,
+    setProjects,
+    selectedProject,
+    selectedEmployee,
+    setSelectedEmployee,
+    setAssignment,
+  } = useSetters();
+
   // For error handling
   const [errorMessage, setError] = useState<string>("");
   const [errorNumber, setErrorNumber] = useState<number>(0);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
+
   const [newEmployeeName, setNewEmployeeName] = useState<string>("");
   const [newAllocation, setNewAllocation] = useState<number>(0);
 
-  const handleAttachEmployee = () => {
-    const employee = listEmployees.find((e) => e.name === newEmployeeName);
-    if (!employee) return;
-
-    const validConnection = validateConnectionSubmit(
-      project,
-      employee,
-      listProjects,
-      newAllocation
-    );
-
-    if (validConnection.isValid) {
-      setProjects((prev) =>
-        prev.map((p) =>
-          p.name.trim().toUpperCase() === project.name.trim().toUpperCase()
-            ? {
-                ...p,
-                employees: [
-                  ...(p.employees || []),
-                  { emp: employee, allocation: newAllocation },
-                ],
-              }
-            : p
-        )
-      );
-      setShowAssign(false);
-      setError("");
-      setErrorNumber(0);
-    } else {
-      setErrorNumber(errorNumber + 1);
-      setError(validConnection.error);
-    }
-  };
-
   return (
-    <Dialog open={true} onClose={() => setShowAssign(false)}>
-      <DialogTitle>Project: {project.name}</DialogTitle>
+    <Dialog open={true} onClose={() => setAssignment(false)}>
+      <DialogTitle>Project: {selectedProject!.name}</DialogTitle>
 
       <DialogContent>
         {errorMessage && (
@@ -95,7 +61,7 @@ export default function Connections({
 
             <TableBody className="TableBody">
               {/* If the project has employees assigned, it will display the required data */}
-              {project.employees?.map((employee) => (
+              {selectedProject!.employees?.map((employee) => (
                 <TableRow
                   className="TableRow"
                   key={employee.emp.name}
@@ -108,8 +74,8 @@ export default function Connections({
                     <LinkOffIcon
                       onClick={(e) => {
                         e.stopPropagation();
-                        detachEmployee(setProjects, project, employee);
-                        setShowAssign(false);
+                        detachEmployee(setProjects, selectedProject!, employee);
+                        setAssignment(false);
                       }}
                     ></LinkOffIcon>
                   </TableCell>
@@ -121,7 +87,10 @@ export default function Connections({
                 <TableCell>
                   <Forms
                     forms="dropdown"
-                    sets={getProjectEmployeesList(listEmployees, project)}
+                    sets={getProjectEmployeesList(
+                      lstofEmployees,
+                      selectedProject!
+                    )}
                     value={newEmployeeName}
                     updt={(val) => setNewEmployeeName(val)}
                   />
@@ -141,12 +110,28 @@ export default function Connections({
       </DialogContent>
 
       <DialogActions>
-        <button className="actionButton" onClick={handleAttachEmployee}>
+        <button
+          className="actionButton"
+          onClick={() =>
+            handleAttachEmployee(
+              newEmployeeName,
+              newAllocation,
+              lstofEmployees,
+              lstofProjects,
+              selectedProject!,
+              setProjects,
+              setAssignment,
+              setError,
+              setErrorNumber,
+              errorNumber
+            )
+          }
+        >
           Save
         </button>
         <button
           onClick={() => {
-            setShowAssign(false);
+            setAssignment(false);
             setError("");
             setErrorNumber(0);
           }}
@@ -155,41 +140,5 @@ export default function Connections({
         </button>
       </DialogActions>
     </Dialog>
-  );
-}
-
-/* 
-Returns an array of employee names that are not assigned to the project
-after filtering the whole employee list to only include that specific employees
-*/
-function getProjectEmployeesList(
-  listEmployees: Employee[],
-  project: Project
-): string[] {
-  const validEmployeeDropdown = listEmployees?.filter(
-    (emp) => !project.employees!.some((pe) => pe.emp.name === emp.name)
-  );
-
-  return validEmployeeDropdown?.map((emp) => emp.name);
-}
-
-function detachEmployee(
-  setProjects: React.Dispatch<React.SetStateAction<Project[]>>,
-  project: Project,
-  employee: { emp: Employee; allocation: number }
-) {
-  setProjects((prev) =>
-    prev.map((p) =>
-      p.name.trim().toUpperCase() === project.name.trim().toUpperCase()
-        ? {
-            ...p,
-            employees: p.employees?.filter(
-              (e) =>
-                e.emp.name.trim().toUpperCase() !==
-                employee.emp.name.trim().toUpperCase()
-            ),
-          }
-        : p
-    )
   );
 }

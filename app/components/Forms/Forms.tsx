@@ -13,6 +13,8 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
 
+//TODO: Tried to solve the bug but couldn't do it. Resolve the load of the value for addition or edition the first render
+
 export default function Forms({
   forms,
   value,
@@ -40,7 +42,7 @@ export default function Forms({
         />
       </Box>
     );
-  }else if (forms === "date") {
+  } else if (forms === "date") {
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
         <span>Date: </span>
@@ -49,7 +51,7 @@ export default function Forms({
             value={dayjs(value, "DD-MM-YYYY")}
             onChange={(e) => updt(e!.format("DD-MM-YYYY"))}
             slotProps={{
-              textField: { required: false },
+              textField: { required: true },
             }}
           />
         </LocalizationProvider>

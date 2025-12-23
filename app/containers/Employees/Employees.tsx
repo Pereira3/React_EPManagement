@@ -10,10 +10,10 @@ import Paper from "@mui/material/Paper";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import EmployeeButton from "../components/Buttons/Employees/EmployeesButton";
+import EmployeeButton from "../../components/Buttons/Employees/EmployeesButton";
 // Importing Types
-import { useSetters } from "../context/Setters";
-import Connections from "./Projects/Connections";
+import { useSetters } from "../../context/Setters";
+import Connections from "./Connections";
 
 // TODO: Project Button for Employees - Line 67
 // TODO: Missing sort feature

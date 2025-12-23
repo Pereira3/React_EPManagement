@@ -1,4 +1,3 @@
-// ---------- IMPORTS ----------
 // Importing Table
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,34 +6,25 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+// Importing Icons
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import EmployeeButton from "../components/Buttons/Employees/EmployeesButton";
-// Importing Types
-import { useSetters } from "../context/Setters";
-import Connections from "./Projects/Connections";
+// Importing Components
+import Connections from "./Connections";
+import ProjectsButton from "../../components/Buttons/Projects/ProjectsButton";
+import { useSetters } from "../../context/Setters";
 
-// TODO: Project Button for Employees - Line 67
 // TODO: Missing sort feature
 
-export default function Employees() {
+export default function Projects() {
   const {
-    lstofEmployees,
+    lstofProjects,
+    selectedProject,
+    setSelectedProject,
     setAction,
-    selectedEmployee,
-    setSelectedEmployee,
     assignment,
     setAssignment,
   } = useSetters();
-
-  const teamsAvailable = [
-    "Not Defined",
-    "Team A",
-    "Team B",
-    "Team C",
-    "Team D",
-  ];
 
   return (
     <div className="mainArea">
@@ -44,51 +34,35 @@ export default function Employees() {
           <AddOutlinedIcon />
           <span>Add</span>
         </button>
-        <button
-          onClick={() => {
-            setAction("Edit");
-          }}
-        >
-          <CreateOutlinedIcon />
-          <span>Edit</span>
-        </button>
         <button onClick={() => setAction("Delete")}>
           <RemoveOutlinedIcon />
           <span>Delete</span>
         </button>
 
-        <EmployeeButton sets={teamsAvailable} />
+        <ProjectsButton />
       </div>
-      {/* Display Data */}
+      {/** Display Data */}
       <div className="data">
         <TableContainer component={Paper} className="TableContainer">
           <Table stickyHeader className="Table">
             <TableHead className="TableHead">
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell align="center">Start Date</TableCell>
-                <TableCell align="center">Role</TableCell>
-                <TableCell align="center">Team</TableCell>
-                <TableCell align="center"></TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody className="TableBody">
-              {lstofEmployees.map((employee) => (
+              {lstofProjects.map((project) => (
                 <TableRow
                   className="TableRow"
-                  key={employee.name}
-                  selected={selectedEmployee?.name === employee.name}
-                  onClick={() => {
-                    setSelectedEmployee(employee);
-                  }}
+                  key={project.name}
+                  selected={selectedProject?.name === project.name}
+                  onClick={() => setSelectedProject(project)}
                 >
-                  <TableCell> {employee.name} </TableCell>
-                  <TableCell align="center">{employee.date}</TableCell>
-                  <TableCell align="center">{employee.role}</TableCell>
-                  <TableCell align="center">{employee.team}</TableCell>
+                  <TableCell>{project.name}</TableCell>
                   <TableCell align="center">
                     <button onClick={() => setAssignment(true)}>
-                      Projects
+                      Employees
                     </button>
                   </TableCell>
                 </TableRow>
@@ -97,7 +71,7 @@ export default function Employees() {
           </Table>
         </TableContainer>
 
-        {assignment && selectedEmployee && <Connections />}
+        {assignment && selectedProject && <Connections />}
       </div>
     </div>
   );

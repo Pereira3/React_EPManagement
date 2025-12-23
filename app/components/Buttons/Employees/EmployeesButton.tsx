@@ -5,37 +5,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { actionsEmp, Employee } from "@/app/shared/types";
 import Forms from "@/app/components/Forms/Forms";
-import { employeeButtonsLogic } from "./employeeButtonsLogic";
+import { useSetters } from "@/app/context/Setters";
+import { useEmployeeButtonsLogic } from "./useEmployeeButtonsLogic";
 
-export default function EmployeesButton({
-  action,
-  lstEmployees,
-  setEmployees,
-  setAction,
-  employeeSelected,
-  setSelectEmployee,
-  sets,
-}: {
-  action: actionsEmp;
-  lstEmployees: Employee[];
-  setEmployees: React.Dispatch<React.SetStateAction<Employee[]>>;
-  setAction: React.Dispatch<React.SetStateAction<actionsEmp>>;
-  employeeSelected: Employee | null;
-  setSelectEmployee: React.Dispatch<React.SetStateAction<Employee | null>>;
-  sets: string[];
-}) {
-  const logic = employeeButtonsLogic(
-    action,
-    lstEmployees,
-    setEmployees,
-    setAction,
-    employeeSelected,
-    setSelectEmployee
-  );
+export default function EmployeesButton({ sets }: { sets: string[] }) {
+  const { selectedEmployee, setSelectedEmployee, action, setAction } =
+    useSetters();
 
-  if (!action) return null;
+  const logic = useEmployeeButtonsLogic();
+
+  if (!action) return "None";
 
   // ---------- ADD ----------
   if (action === "Add") {
@@ -43,7 +23,7 @@ export default function EmployeesButton({
       <Dialog
         open={true}
         onClose={() => {
-          setAction(null);
+          setAction("None");
         }}
       >
         <DialogTitle>Add Employee</DialogTitle>
@@ -89,7 +69,7 @@ export default function EmployeesButton({
           </button>
           <button
             onClick={() => {
-              setAction(null);
+              setAction("None");
             }}
           >
             Cancel
@@ -101,13 +81,13 @@ export default function EmployeesButton({
 
   // ---------- EDIT ----------
   if (action === "Edit") {
-    if (employeeSelected) {
+    if (selectedEmployee) {
       return (
         <Dialog
           open={true}
           onClose={() => {
-            setAction(null);
-            setSelectEmployee(null);
+            setAction("None");
+            setSelectedEmployee(null);
           }}
         >
           <DialogTitle>Edit Employee</DialogTitle>
@@ -151,19 +131,19 @@ export default function EmployeesButton({
             >
               Edit
             </button>
-            <button onClick={() => setAction(null)}>Cancel</button>
+            <button onClick={() => setAction("None")}>Cancel</button>
           </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open={true} onClose={() => setAction(null)}>
+        <Dialog open={true} onClose={() => setAction("None")}>
           <DialogTitle>Employee Not Selected</DialogTitle>
           <DialogContent>
             You have to select one employee to be able to edit it.
           </DialogContent>
           <DialogActions>
-            <button className="actionButton" onClick={() => setAction(null)}>
+            <button className="actionButton" onClick={() => setAction("None")}>
               OK
             </button>
           </DialogActions>
@@ -174,38 +154,38 @@ export default function EmployeesButton({
 
   // ---------- DELETE ----------
   if (action === "Delete") {
-    if (employeeSelected) {
+    if (selectedEmployee) {
       return (
         <Dialog
           open={true}
           onClose={() => {
-            setAction(null);
-            setSelectEmployee(null);
+            setAction("None");
+            setSelectedEmployee(null);
           }}
         >
           <DialogTitle>Delete Employee</DialogTitle>
           <DialogContent>
             Are you sure you want to delete Employee{" "}
-            <strong>{employeeSelected.name}</strong> and this allocation to
+            <strong>{selectedEmployee.name}</strong> and this allocation to
             projects?
           </DialogContent>
           <DialogActions>
             <button className="actionButton" onClick={logic.handleDelete}>
               Delete
             </button>
-            <button onClick={() => setAction(null)}>Cancel</button>
+            <button onClick={() => setAction("None")}>Cancel</button>
           </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open={true} onClose={() => setAction(null)}>
+        <Dialog open={true} onClose={() => setAction("None")}>
           <DialogTitle>Employee Not Selected</DialogTitle>
           <DialogContent>
             You have to select one employee to be able to delete it.
           </DialogContent>
           <DialogActions>
-            <button className="actionButton" onClick={() => setAction(null)}>
+            <button className="actionButton" onClick={() => setAction("None")}>
               OK
             </button>
           </DialogActions>

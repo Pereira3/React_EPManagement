@@ -50,6 +50,7 @@ const validateDate = (
   // To compare the dates, had to convert them to dayjs objects
   const parsedDate = dayjs(date, "DD-MM-YYYY");
   const parsedMin = dayjs(minDate, "DD-MM-YYYY");
+  // Changed to include the day of today as a valid date
   const parsedMax = dayjs(maxDate, "DD-MM-YYYY");
 
   if (parsedDate.isBefore(parsedMin)) {
@@ -127,7 +128,7 @@ export const validateEmployeeSubmit = (
   );
 
   const dateValidation = validateDate(
-    formsValues.date!,
+    formsValues.date,
     dayjs().subtract(70, "year").format("DD-MM-YYYY"),
     dayjs().format("DD-MM-YYYY")
   );
@@ -138,7 +139,7 @@ export const validateEmployeeSubmit = (
   if (!dateValidation.isValid) {
     return { isValid: false, error: dateValidation.error };
   }
-
+  
   return { isValid: true, error: "" };
 };
 

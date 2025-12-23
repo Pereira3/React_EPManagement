@@ -1,45 +1,40 @@
 import { useState, useEffect } from "react";
-import { Employee, formsValues, actionsEmp } from "../../../shared/types";
+import { Employee } from "../../../shared/types";
 import { validateEmployeeSubmit } from "../../Forms/formsValidation";
 import dayjs from "dayjs";
+import { useSetters } from "@/app/context/Setters";
 
-//TODO: Explore why the initialization of the date doesn't work except when it's initialiazed as dayjs() type instead of the correct one (string)
+export function useEmployeeButtonsLogic() {
+  const {
+    lstofEmployees,
+    setEmployees,
+    selectedEmployee,
+    setSelectedEmployee,
+    action,
+    setAction,
+    formsValues,
+    setFormValues,
+  } = useSetters();
 
-export function employeeButtonsLogic(
-  action: actionsEmp,
-  lstEmployees: Employee[],
-  setEmployees: React.Dispatch<React.SetStateAction<Employee[]>>,
-  setAction: React.Dispatch<React.SetStateAction<actionsEmp>>,
-  employeeSelected: Employee | null,
-  setSelectEmployee: React.Dispatch<React.SetStateAction<Employee | null>>
-) {
   // For error handling
   const [errorMessage, setError] = useState<string>("");
   const [errorNumber, setErrorNumber] = useState<number>(0);
 
-  // Form values state
-  const [formsValues, setFormValues] = useState<formsValues>({
-    name: "",
-    date: "",
-    role: "None",
-    team: "Not Defined",
-  });
-
   // Update form values when action changes
   useEffect(() => {
-    if (action === "Edit" && employeeSelected) {
+    if (action === "Edit" && selectedEmployee) {
       setFormValues({
-        name: employeeSelected.name,
-        date: employeeSelected.date,
-        role: employeeSelected.role,
-        team: employeeSelected.team,
+        name: selectedEmployee.name,
+        date: selectedEmployee.date,
+        role: selectedEmployee.role,
+        team: selectedEmployee.team,
       });
     }
 
     if (action === "Add") {
       setFormValues({
         name: "",
-        date: dayjs(),
+        date: dayjs().format("DD-MM-YYYY"),
         role: "None",
         team: "Not Defined",
       });
@@ -47,7 +42,7 @@ export function employeeButtonsLogic(
     // Clear errors when dialog opens
     setError("");
     setErrorNumber(0);
-  }, [action, employeeSelected]);
+  }, [action, selectedEmployee]);
 
   // Handler for individual field changes
   const handleChange = (field: string, value: string) => {
@@ -55,10 +50,11 @@ export function employeeButtonsLogic(
   };
 
   // Handler for adding an employee
+  // Default value was type date, which would flag an error, for that reason the validation of type was necessary
   const handleAddSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const validation = validateEmployeeSubmit(formsValues, lstEmployees);
+    const validation = validateEmployeeSubmit(formsValues, lstofEmployees);
 
     if (validation.isValid) {
       setEmployees((employees) => {
@@ -70,7 +66,7 @@ export function employeeButtonsLogic(
         };
         return [...employees, newEmployee];
       });
-      setAction(null);
+      setAction("None");
     } else {
       setErrorNumber(errorNumber + 1);
       setError(validation.error);
@@ -81,18 +77,18 @@ export function employeeButtonsLogic(
   const handleEditSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (employeeSelected) {
+    if (selectedEmployee) {
       const validation = validateEmployeeSubmit(
         formsValues,
-        lstEmployees,
-        employeeSelected.name
+        lstofEmployees,
+        selectedEmployee.name
       );
 
       if (validation.isValid) {
         setEmployees((prev) => {
           return prev.map((employee) =>
             employee.name.trim().toUpperCase() ===
-            employeeSelected.name.trim().toUpperCase()
+            selectedEmployee.name.trim().toUpperCase()
               ? {
                   ...employee,
                   name: formsValues.name,
@@ -103,8 +99,8 @@ export function employeeButtonsLogic(
               : employee
           );
         });
-        setAction(null);
-        setSelectEmployee(null);
+        setAction("None");
+        setSelectedEmployee(null);
       } else {
         setErrorNumber(errorNumber + 1);
         setError(validation.error);
@@ -114,16 +110,16 @@ export function employeeButtonsLogic(
 
   // Handler for deleting an employee
   const handleDelete = () => {
-    if (employeeSelected) {
+    if (selectedEmployee) {
       setEmployees((prev) =>
         prev.filter(
           (emp) =>
             emp.name.trim().toUpperCase() !==
-            employeeSelected.name.trim().toUpperCase()
+            selectedEmployee.name.trim().toUpperCase()
         )
       );
-      setAction(null);
-      setSelectEmployee(null);
+      setAction("None");
+      setSelectedEmployee(null);
     }
   };
 

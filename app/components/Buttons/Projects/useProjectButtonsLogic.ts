@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { validateProjectSubmit } from "../../Forms/formsValidation";
-import { actionsProj, Project } from "../../../shared/types";
+import { Project } from "../../../shared/types";
+import { useSetters } from "@/app/context/Setters";
 
-export function projectButtonsLogic(
-  action: actionsProj,
-  lstProjects: Project[],
-  setProjects: React.Dispatch<React.SetStateAction<Project[]>>,
-  setAction: React.Dispatch<React.SetStateAction<actionsProj>>,
-  projectSelected: Project | null,
-  setSelectProject: React.Dispatch<React.SetStateAction<Project | null>>
-) {
+export function useProjectButtonsLogic() {
+  const {
+    lstofProjects,
+    setProjects,
+    selectedProject,
+    setSelectedProject,
+    action,
+    setAction,
+  } = useSetters();
+
   // For error handling
   const [errorMessage, setError] = useState<string>("");
   const [errorNumber, setErrorNumber] = useState<number>(0);
@@ -32,7 +35,7 @@ export function projectButtonsLogic(
   const handleAddSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const validation = validateProjectSubmit(lstProjects, projectName, 0, 10);
+    const validation = validateProjectSubmit(lstofProjects, projectName, 0, 10);
 
     // Check for duplicates
     if (validation.isValid) {
@@ -42,7 +45,7 @@ export function projectButtonsLogic(
         };
         return [...projects, newProject];
       });
-      setAction(null);
+      setAction("None");
     } else {
       setErrorNumber(errorNumber + 1);
       setError(validation.error);
@@ -51,16 +54,16 @@ export function projectButtonsLogic(
 
   // ---------- Handler for the deletion of a project ----------
   const handleDelete = () => {
-    if (projectSelected) {
+    if (selectedProject) {
       setProjects((prev) => {
         return prev.filter(
           (project) =>
             project.name.trim().toUpperCase() !==
-            projectSelected.name.trim().toUpperCase()
+            selectedProject.name.trim().toUpperCase()
         );
       });
-      setAction(null);
-      setSelectProject(null);
+      setAction("None");
+      setSelectedProject(null);
     }
   };
 
