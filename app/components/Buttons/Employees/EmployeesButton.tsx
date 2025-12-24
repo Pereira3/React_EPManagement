@@ -1,19 +1,21 @@
 // ----- IMPORTS -----
-import React from "react";
+import "../../../containers/containers.css";
+// Importing MUI Components
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Forms from "@/app/components/Forms/Forms";
-import { useSetters } from "@/app/context/Setters";
-import { useEmployeeButtonsLogic } from "./useEmployeeButtonsLogic";
+// Importing Contexts
+import { useWebContext } from "@/app/context/WebContext";
+import { useEmployeeContext } from "@/app/context/EmployeeContext";
+import { useEmployeesLogic } from "./useEmployeesLogic";
 
 export default function EmployeesButton({ sets }: { sets: string[] }) {
-  const { selectedEmployee, setSelectedEmployee, action, setAction } =
-    useSetters();
-
-  const logic = useEmployeeButtonsLogic();
+  const { action, setAction } = useWebContext();
+  const { selectedEmployee} = useEmployeeContext();
+  const logic = useEmployeesLogic();
 
   if (!action) return "None";
 
@@ -22,9 +24,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
     return (
       <Dialog
         open={true}
-        onClose={() => {
-          setAction("None");
-        }}
+        onClose={() => logic.clearSelectionsAndErrors()}
       >
         <DialogTitle>Add Employee</DialogTitle>
         <DialogContent>
@@ -69,7 +69,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
           </button>
           <button
             onClick={() => {
-              setAction("None");
+              logic.clearSelectionsAndErrors();
             }}
           >
             Cancel
@@ -86,8 +86,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
         <Dialog
           open={true}
           onClose={() => {
-            setAction("None");
-            setSelectedEmployee(null);
+            logic.clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Edit Employee</DialogTitle>
@@ -131,13 +130,24 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
             >
               Edit
             </button>
-            <button onClick={() => setAction("None")}>Cancel</button>
+            <button
+              onClick={() => {
+                logic.clearSelectionsAndErrors();
+              }}
+            >
+              Cancel
+            </button>
           </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open={true} onClose={() => setAction("None")}>
+        <Dialog
+          open={true}
+          onClose={() => {
+            logic.clearSelectionsAndErrors();
+          }}
+        >
           <DialogTitle>Employee Not Selected</DialogTitle>
           <DialogContent>
             You have to select one employee to be able to edit it.
@@ -159,8 +169,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
         <Dialog
           open={true}
           onClose={() => {
-            setAction("None");
-            setSelectedEmployee(null);
+            logic.clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Delete Employee</DialogTitle>
@@ -173,13 +182,24 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
             <button className="actionButton" onClick={logic.handleDelete}>
               Delete
             </button>
-            <button onClick={() => setAction("None")}>Cancel</button>
+            <button
+              onClick={() => {
+                logic.clearSelectionsAndErrors();
+              }}
+            >
+              Cancel
+            </button>
           </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open={true} onClose={() => setAction("None")}>
+        <Dialog
+          open={true}
+          onClose={() => {
+            logic.clearSelectionsAndErrors();
+          }}
+        >
           <DialogTitle>Employee Not Selected</DialogTitle>
           <DialogContent>
             You have to select one employee to be able to delete it.

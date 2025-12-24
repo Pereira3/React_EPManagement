@@ -1,18 +1,24 @@
-// ----- IMPORTS -----
+// ---------- IMPORTS ----------
+import "../../../containers/containers.css";
+// Importing MUI Components
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { DialogContentText } from "@mui/material";
+// Importing Components
 import Forms from "@/app/components/Forms/Forms";
-import { useSetters } from "@/app/context/Setters";
-import { useProjectButtonsLogic } from "./useProjectButtonsLogic";
+// Importing Contexts
+import { useWebContext } from "@/app/context/WebContext";
+import { useProjectContext } from "@/app/context/ProjectContext";
+import { useProjectsLogic } from "./useProjectsLogic";
 
 export default function ProjectButton() {
 
-  const { selectedProject, setSelectedProject, action, setAction } = useSetters();
-  
-  const logic = useProjectButtonsLogic();
+  const { action, setAction } = useWebContext();
+  const { selectedProject } = useProjectContext();
+
+  const logic = useProjectsLogic();
 
   if (!action) return "None";
 
@@ -22,7 +28,7 @@ export default function ProjectButton() {
       <Dialog
         open={true}
         onClose={() => {
-          setAction("None");
+          logic.clearSelectionsAndErrors();
         }}
       >
         <DialogTitle>Add Project</DialogTitle>
@@ -47,7 +53,7 @@ export default function ProjectButton() {
           </button>
           <button
             onClick={() => {
-              setAction("None");
+              logic.clearSelectionsAndErrors();
             }}
           >
             Cancel
@@ -64,27 +70,25 @@ export default function ProjectButton() {
         <Dialog
           open={true}
           onClose={() => {
-            setAction("None");
-            setSelectedProject(null);
+            logic.clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Delete Project</DialogTitle>
           <DialogContent>
             Are you sure you want to delete Project{" "}
-            <strong>{selectedProject.name}</strong> and all the employees
-            allocated to it?
+            <strong>{selectedProject.name}</strong> and all employees allocation associated to it?
           </DialogContent>
           <DialogActions>
             <button className="actionButton" onClick={logic.handleDelete}>
               Delete
             </button>
-            <button onClick={() => setAction("None")}>Cancel</button>
+            <button onClick={() => logic.clearSelectionsAndErrors() }>Cancel</button>
           </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open={true} onClose={() => setAction("None")}>
+        <Dialog open={true} onClose={() => logic.clearSelectionsAndErrors()}>
           <DialogTitle>Project Not Selected</DialogTitle>
           <DialogContent>
             You have to select one project to be able to delete it.

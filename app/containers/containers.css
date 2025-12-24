@@ -1,0 +1,100 @@
+.mainArea {
+  padding: 1rem;
+}
+
+.actionButton {
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgb(70, 70, 255);
+  border-color: black;
+  color: azure;
+}
+button:not(.actionButton) {
+  color: rgb(70, 70, 255);
+  text-decoration: underline rgb(70, 70, 255);
+}
+
+.managementButtons button {
+  color: black;
+  text-decoration: none;
+  margin-right: 0.625rem;
+  padding: 0.2rem 0.625rem;
+  border: 2px solid black;
+}
+
+.TableContainer {
+  max-height: calc(100vh - 17.2rem);
+  overflow-y: auto;
+  border-left: none;
+  border-right: none;
+  th {
+    border-bottom: 2px solid black;
+    background-color: rgb(180, 180, 180);
+  }
+  td {
+    cursor: pointer;
+    border-bottom: 2px solid black;
+    background-color: rgb(230, 230, 230);
+  }
+  .MuiTableRow-root:hover td {
+    background-color: rgba(157, 0, 0, 0.3);
+  }
+  .MuiTableRow-root.Mui-selected td {
+    background-color: white;
+  }
+  .MuiTableRow-root.Mui-selected:hover td {
+    background-color: rgba(157, 0, 0, 0.15);
+  }
+}
+
+.TableConnectionsContainer {
+  border: 2px solid;
+  th {
+    background-color: rgb(180, 180, 180);
+    border: 1px solid;
+    border-bottom: none;
+    border-top: none;
+  }
+  td {
+    border: 1px solid;
+    border-bottom: none;
+    border-top: none;
+  }
+  .MuiTableRow-root:hover:not(.LastRow) td {
+    background-color: rgba(157, 0, 0, 0.3);
+  }
+  .MuiTableRow-root.Mui-selected:not(.LastRow) td {
+    background-color: white;
+  }
+  .MuiTableRow-root.Mui-selected:hover:not(.LastRow) td {
+    background-color: rgba(157, 0, 0, 0.15);
+  }
+}
+
+/* SIZES DEFINED AND COPIED FROM W3Schools
+https://www.w3schools.com/howto/howto_css_media_query_breakpoints.asp */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}

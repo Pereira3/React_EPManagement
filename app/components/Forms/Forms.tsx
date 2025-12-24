@@ -1,8 +1,9 @@
+// ---------- IMPORTS ----------
+// Importing MUI Components
 import Box from "@mui/material/Box";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import "dayjs/locale/en-gb";
-import { formTypes } from "../../shared/types";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
@@ -12,6 +13,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
+// Importing Types
+import { formTypes } from "../../shared/types";
 
 //TODO: Tried to solve the bug but couldn't do it. Resolve the load of the value for addition or edition the first render
 

@@ -6,11 +6,18 @@ git clone https://github.com/Pereira3/React_EPManagement.git
 npm install
 npm run dev
 ```
+
+If you want to run husky witouth having to commit into github, write:
+```bash
+bash .hasky/pre-commit
+```
  
 If you want to skip husky's pre-commit linting and typecheck, when commiting write:
 ```bash
 git commit -m "Message" --no-verify
 ```
+
+The CSS defined is following mockups that were given in intent to clone them.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 ## Learn More about Next.js

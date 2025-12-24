@@ -1,3 +1,7 @@
+// ---------- IMPORTS ----------
+import { useState } from "react";
+import "../containers.css";
+// Importing MUI Components
 import {
   Dialog,
   DialogActions,
@@ -12,25 +16,31 @@ import {
   TableRow,
 } from "@mui/material";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
-import { useState } from "react";
+// Importing Components
 import Forms from "../../components/Forms/Forms";
-import { useSetters } from "../../context/Setters";
+// Importing Contexts
+import { useProjectContext } from "@/app/context/ProjectContext";
+import { useEmployeeContext } from "@/app/context/EmployeeContext";
+import { useWebContext } from "@/app/context/WebContext";
+// Importing Functions
 import {
   detachEmployee,
   getProjectEmployeesList,
   handleAttachEmployee,
-} from "./ConnectionsFunctions";
+} from "./ProjectFunctions";
 
 export default function Connections() {
+  
+  const { setAssignment } = useWebContext();
+  
+  const { lstofEmployees, selectedEmployee, setSelectedEmployee } = useEmployeeContext();
+
   const {
-    lstofEmployees,
     lstofProjects,
     setProjects,
     selectedProject,
-    selectedEmployee,
-    setSelectedEmployee,
-    setAssignment,
-  } = useSetters();
+    setSelectedProject,
+  } = useProjectContext();
 
   // For error handling
   const [errorMessage, setError] = useState<string>("");
@@ -40,7 +50,7 @@ export default function Connections() {
   const [newAllocation, setNewAllocation] = useState<number>(0);
 
   return (
-    <Dialog open={true} onClose={() => setAssignment(false)}>
+    <Dialog open={true} onClose={() => { setAssignment(false); setSelectedProject(null); }}>
       <DialogTitle>Project: {selectedProject!.name}</DialogTitle>
 
       <DialogContent>
@@ -112,7 +122,7 @@ export default function Connections() {
       <DialogActions>
         <button
           className="actionButton"
-          onClick={() =>
+          onClick={() => {
             handleAttachEmployee(
               newEmployeeName,
               newAllocation,
@@ -124,7 +134,8 @@ export default function Connections() {
               setError,
               setErrorNumber,
               errorNumber
-            )
+            );
+          }
           }
         >
           Save
@@ -134,6 +145,7 @@ export default function Connections() {
             setAssignment(false);
             setError("");
             setErrorNumber(0);
+            setSelectedProject(null);
           }}
         >
           Cancel

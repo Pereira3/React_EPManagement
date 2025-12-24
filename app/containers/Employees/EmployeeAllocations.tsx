@@ -1,3 +1,7 @@
+// ---------- IMPORTS ----------
+import { useState } from "react";
+import "../containers.css";
+// Importing MUI Components
 import {
   Dialog,
   DialogActions,
@@ -11,23 +15,31 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import LinkOffIcon from "@mui/icons-material/LinkOff";
-import { useState } from "react";
-import { useSetters } from "../../context/Setters";
-import { getEmployeeProjects } from "./ConnectionsFunctions";
+// Importing Contexts
+import { useEmployeeContext } from "@/app/context/EmployeeContext";
+import { useProjectContext } from "@/app/context/ProjectContext";
+import { useWebContext } from "@/app/context/WebContext";
+// Importing Functions
+import { getEmployeeProjects } from "./EmployeeFunctions";
 
-export default function Connections() {
-  const { lstofProjects, selectedEmployee, setAssignment } = useSetters();
+export default function EmployeeAllocations() {
+
+  const { setAssignment } = useWebContext();
+  const { selectedEmployee, setSelectedEmployee } = useEmployeeContext();
+  const { lstofProjects } = useProjectContext();
 
   // For error handling
   const [errorMessage, setError] = useState<string>("");
   const [errorNumber, setErrorNumber] = useState<number>(0);
 
   // Get all projects where the selected employee is allocated
-  const employeeProjects = getEmployeeProjects(lstofProjects, selectedEmployee!);
+  const employeeProjects = getEmployeeProjects(
+    lstofProjects,
+    selectedEmployee!
+  );
 
   return (
-    <Dialog open={true} onClose={() => setAssignment(false)}>
+    <Dialog open={true} onClose={() => { setAssignment(false); setSelectedEmployee(null); }}>
       <DialogTitle>Employee: {selectedEmployee!.name}</DialogTitle>
 
       <DialogContent>
@@ -40,9 +52,8 @@ export default function Connections() {
           <Table stickyHeader className="Table">
             <TableHead className="TableHead">
               <TableRow>
-                <TableCell>Project</TableCell>
-                <TableCell>Allocation</TableCell>
-                <TableCell align="center">X</TableCell>
+                <TableCell align="center">Project</TableCell>
+                <TableCell align="center">Allocation</TableCell>
               </TableRow>
             </TableHead>
 
@@ -50,11 +61,8 @@ export default function Connections() {
               {/* Display all projects where the employee is allocated */}
               {employeeProjects.map((item) => (
                 <TableRow className="TableRow" key={item!.project.name}>
-                  <TableCell>{item!.project.name}</TableCell>
-                  <TableCell>{item!.allocation}%</TableCell>
-                  <TableCell align="center">
-                    <LinkOffIcon style={{ cursor: "pointer" }} />
-                  </TableCell>
+                  <TableCell align="center">{item!.project.name}</TableCell>
+                  <TableCell align="center">{item!.allocation}%</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -66,6 +74,7 @@ export default function Connections() {
         <button
           onClick={() => {
             setAssignment(false);
+            setSelectedEmployee(null);
             setError("");
             setErrorNumber(0);
           }}

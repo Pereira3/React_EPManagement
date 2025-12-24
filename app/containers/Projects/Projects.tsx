@@ -1,4 +1,6 @@
-// Importing Table
+// ---------- IMPORTS ----------
+import "../containers.css";
+// Importing MUI Components
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,21 +12,23 @@ import Paper from "@mui/material/Paper";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 // Importing Components
-import Connections from "./Connections";
-import ProjectsButton from "../../components/Buttons/Projects/ProjectsButton";
-import { useSetters } from "../../context/Setters";
+import ProjectDetails from "@/app/containers/Projects/ProjectDetails";
+import ProjectsButton from "@/app/components/Buttons/Projects/ProjectsButton";
+// Importing Contexts
+import { useProjectContext } from "@/app/context/ProjectContext";
+import { useWebContext } from "@/app/context/WebContext";
 
 // TODO: Missing sort feature
 
 export default function Projects() {
+  
+  const { assignment, setAssignment, setAction } = useWebContext();
+  
   const {
     lstofProjects,
     selectedProject,
     setSelectedProject,
-    setAction,
-    assignment,
-    setAssignment,
-  } = useSetters();
+  } = useProjectContext();
 
   return (
     <div className="mainArea">
@@ -71,7 +75,7 @@ export default function Projects() {
           </Table>
         </TableContainer>
 
-        {assignment && selectedProject && <Connections />}
+        {assignment && selectedProject && <ProjectDetails />}
       </div>
     </div>
   );

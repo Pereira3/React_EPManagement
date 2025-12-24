@@ -1,24 +1,33 @@
-import { useState, useEffect } from "react";
-import { Employee } from "../../../shared/types";
-import { validateEmployeeSubmit } from "../../Forms/formsValidation";
+// ---------- IMPORTS ----------
+import { useEffect } from "react";
 import dayjs from "dayjs";
-import { useSetters } from "@/app/context/Setters";
+// Importing Types
+import { Employee } from "../../../shared/types";
+// Importing Validation Functions
+import { validateEmployeeSubmit } from "../../Forms/formsValidation";
+// Importing Contexts
+import { useWebContext } from "@/app/context/WebContext";
+import { useEmployeeContext } from "@/app/context/EmployeeContext";
+import { useProjectContext } from "@/app/context/ProjectContext";
 
-export function useEmployeeButtonsLogic() {
+export function useEmployeesLogic() {
+  const {
+    action,
+    setAction,
+    formsValues,
+    setFormValues,
+    errorMessage,
+    setError,
+    errorNumber,
+    setErrorNumber,
+  } = useWebContext();
   const {
     lstofEmployees,
     setEmployees,
     selectedEmployee,
     setSelectedEmployee,
-    action,
-    setAction,
-    formsValues,
-    setFormValues,
-  } = useSetters();
-
-  // For error handling
-  const [errorMessage, setError] = useState<string>("");
-  const [errorNumber, setErrorNumber] = useState<number>(0);
+  } = useEmployeeContext();
+  const { setProjects } = useProjectContext();
 
   // Update form values when action changes
   useEffect(() => {
@@ -39,15 +48,20 @@ export function useEmployeeButtonsLogic() {
         team: "Not Defined",
       });
     }
-    // Clear errors when dialog opens
-    setError("");
-    setErrorNumber(0);
-  }, [action, selectedEmployee]);
+  }, [action, selectedEmployee, setFormValues]);
 
   // Handler for individual field changes
   const handleChange = (field: string, value: string) => {
     setFormValues((prev) => ({ ...prev, [field]: value }));
   };
+
+  // Clear selections and errors
+  function clearSelectionsAndErrors() {
+    setError("");
+    setAction("None");
+    setErrorNumber(0);
+    setSelectedEmployee(null);
+  }
 
   // Handler for adding an employee
   // Default value was type date, which would flag an error, for that reason the validation of type was necessary
@@ -66,7 +80,7 @@ export function useEmployeeButtonsLogic() {
         };
         return [...employees, newEmployee];
       });
-      setAction("None");
+      clearSelectionsAndErrors();
     } else {
       setErrorNumber(errorNumber + 1);
       setError(validation.error);
@@ -99,8 +113,7 @@ export function useEmployeeButtonsLogic() {
               : employee
           );
         });
-        setAction("None");
-        setSelectedEmployee(null);
+        clearSelectionsAndErrors();
       } else {
         setErrorNumber(errorNumber + 1);
         setError(validation.error);
@@ -118,8 +131,23 @@ export function useEmployeeButtonsLogic() {
             selectedEmployee.name.trim().toUpperCase()
         )
       );
-      setAction("None");
-      setSelectedEmployee(null);
+
+      setProjects((prev) =>
+        prev.map((project) =>
+          project.employees
+            ? {
+                ...project,
+                employees: project.employees.filter(
+                  (proj) =>
+                    proj.emp.name.trim().toUpperCase() !==
+                    selectedEmployee.name.trim().toUpperCase()
+                ),
+              }
+            : project
+        )
+      );
+
+      clearSelectionsAndErrors();
     }
   };
 
@@ -131,5 +159,6 @@ export function useEmployeeButtonsLogic() {
     handleAddSubmit,
     handleEditSubmit,
     handleDelete,
+    clearSelectionsAndErrors,
   };
 }

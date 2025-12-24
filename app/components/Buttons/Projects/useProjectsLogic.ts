@@ -1,35 +1,39 @@
-import { useEffect, useState } from "react";
+// ---------- IMPORTS ----------
+import { useState } from "react";
+// Importing Validation Functions
 import { validateProjectSubmit } from "../../Forms/formsValidation";
+// Importing Types
 import { Project } from "../../../shared/types";
-import { useSetters } from "@/app/context/Setters";
+// Importing Contexts
+import { useProjectContext } from "@/app/context/ProjectContext";
+import { useWebContext } from "@/app/context/WebContext";
 
-export function useProjectButtonsLogic() {
+export function useProjectsLogic() {
+
+  const { setAction } = useWebContext();
   const {
     lstofProjects,
     setProjects,
     selectedProject,
     setSelectedProject,
-    action,
-    setAction,
-  } = useSetters();
+  } = useProjectContext();
 
   // For error handling
   const [errorMessage, setError] = useState<string>("");
   const [errorNumber, setErrorNumber] = useState<number>(0);
   const [projectName, setProjectName] = useState("");
 
-  // Update form values when an action is defined (Button pressed)
-  useEffect(() => {
-    if (action === "Add") {
-      setProjectName("");
-      setError("");
-      setErrorNumber(0);
-    }
-  }, [action]);
-
   const handleChange = (name: string) => {
     setProjectName(name);
   };
+
+  function clearSelectionsAndErrors() {
+    setError("");
+    setAction("None");
+    setErrorNumber(0);
+    setProjectName("");
+    setSelectedProject(null);
+  }
 
   // ---------- Handler for the addition of a project ----------
   const handleAddSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -45,7 +49,7 @@ export function useProjectButtonsLogic() {
         };
         return [...projects, newProject];
       });
-      setAction("None");
+      clearSelectionsAndErrors();
     } else {
       setErrorNumber(errorNumber + 1);
       setError(validation.error);
@@ -62,8 +66,7 @@ export function useProjectButtonsLogic() {
             selectedProject.name.trim().toUpperCase()
         );
       });
-      setAction("None");
-      setSelectedProject(null);
+      clearSelectionsAndErrors();
     }
   };
 
@@ -74,5 +77,6 @@ export function useProjectButtonsLogic() {
     handleChange,
     handleAddSubmit,
     handleDelete,
+    clearSelectionsAndErrors,
   };
 }
