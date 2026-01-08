@@ -16,8 +16,6 @@ import dayjs from "dayjs";
 // Importing Types
 import { formTypes } from "../../shared/types";
 
-//TODO: Tried to solve the bug but couldn't do it. Resolve the load of the value for addition or edition the first render
-
 export default function Forms({
   forms,
   value,

@@ -6,11 +6,13 @@ import { validateProjectSubmit } from "../../Forms/formsValidation";
 import { Project } from "../../../shared/types";
 // Importing Contexts
 import { useProjectContext } from "@/app/context/ProjectContext";
-import { useWebContext } from "@/app/context/WebContext";
+import { useDialogContext } from "@/app/context/DialogContext";
+import { useErrorContext } from "@/app/context/ErrorContext";
+import { normalizedString } from "@/app/shared/utils";
 
 export function useProjectsLogic() {
 
-  const { setAction } = useWebContext();
+  const { setAction } = useDialogContext();
   const {
     lstofProjects,
     setProjects,
@@ -19,8 +21,7 @@ export function useProjectsLogic() {
   } = useProjectContext();
 
   // For error handling
-  const [errorMessage, setError] = useState<string>("");
-  const [errorNumber, setErrorNumber] = useState<number>(0);
+  const { errorMessage, setError, errorNumber, setErrorNumber } = useErrorContext();
   const [projectName, setProjectName] = useState("");
 
   const handleChange = (name: string) => {
@@ -62,8 +63,8 @@ export function useProjectsLogic() {
       setProjects((prev) => {
         return prev.filter(
           (project) =>
-            project.name.trim().toUpperCase() !==
-            selectedProject.name.trim().toUpperCase()
+            normalizedString(project.name) !==
+            normalizedString(selectedProject.name)
         );
       });
       clearSelectionsAndErrors();

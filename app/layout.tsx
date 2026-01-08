@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-// ---------- CSS FILE ----------
+// ---------- GENERIC CSS FILE ----------
 import "./shared/page.css";
-// ---------- CONTEXT ----------
+// ---------- CONTEXTS ----------
 import { ProjectContextProvider } from "./context/ProjectContext";
 import { EmployeeContextProvider } from "./context/EmployeeContext";
-import { WebContextProvider } from "./context/WebContext";
+import { DialogContextProvider } from "./context/DialogContext";
+import { FormsContextProvider } from "./context/FormsContext";
+import { ErrorContextProvider } from "./context/ErrorContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +33,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <WebContextProvider>
-          <ProjectContextProvider>
-            <EmployeeContextProvider>{children}</EmployeeContextProvider>
-          </ProjectContextProvider>
-        </WebContextProvider>
+        <ProjectContextProvider>
+          <EmployeeContextProvider>
+            <DialogContextProvider>
+              <FormsContextProvider>
+                <ErrorContextProvider>
+                  {children}
+                </ErrorContextProvider>
+              </FormsContextProvider>
+            </DialogContextProvider>
+          </EmployeeContextProvider>
+        </ProjectContextProvider>
       </body>
     </html>
   );

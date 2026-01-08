@@ -1,5 +1,5 @@
 // ---------- IMPORTS ----------
-import { useState } from "react";
+import { useMemo } from "react";
 import "../containers.css";
 // Importing MUI Components
 import {
@@ -18,24 +18,24 @@ import {
 // Importing Contexts
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useProjectContext } from "@/app/context/ProjectContext";
-import { useWebContext } from "@/app/context/WebContext";
+import { useDialogContext } from "@/app/context/DialogContext";
+import { useErrorContext } from "@/app/context/ErrorContext";
 // Importing Functions
 import { getEmployeeProjects } from "./EmployeeFunctions";
 
 export default function EmployeeAllocations() {
 
-  const { setAssignment } = useWebContext();
+  const { setAssignment } = useDialogContext();
   const { selectedEmployee, setSelectedEmployee } = useEmployeeContext();
   const { lstofProjects } = useProjectContext();
 
   // For error handling
-  const [errorMessage, setError] = useState<string>("");
-  const [errorNumber, setErrorNumber] = useState<number>(0);
+  const { errorMessage, setError, errorNumber, setErrorNumber } = useErrorContext();
 
   // Get all projects where the selected employee is allocated
-  const employeeProjects = getEmployeeProjects(
-    lstofProjects,
-    selectedEmployee!
+  const employeeProjects = useMemo(
+    () => getEmployeeProjects(lstofProjects, selectedEmployee!),
+    [lstofProjects, selectedEmployee]
   );
 
   return (

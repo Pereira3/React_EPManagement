@@ -13,8 +13,9 @@ const ProjectContext = createContext<ProjectContextTypes | undefined>(
 export function ProjectContextProvider({ children }: { children: ReactNode }) {
   // Created List of Projects initializated with initialData.ts file
   const [lstofProjects, setProjects] = useState<Project[]>(initialProjects);
-
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const [orderBy, setOrderBy] = useState<"asc" | "desc" | null>(null);
 
   return (
     <ProjectContext.Provider
@@ -23,6 +24,8 @@ export function ProjectContextProvider({ children }: { children: ReactNode }) {
         setProjects,
         selectedProject,
         setSelectedProject,
+        orderBy,
+        setOrderBy,
       }}
     >
       {children}

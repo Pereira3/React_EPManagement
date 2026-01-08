@@ -9,18 +9,18 @@ import { DialogContentText } from "@mui/material";
 // Importing Components
 import Forms from "@/app/components/Forms/Forms";
 // Importing Contexts
-import { useWebContext } from "@/app/context/WebContext";
+import { useDialogContext } from "@/app/context/DialogContext";
 import { useProjectContext } from "@/app/context/ProjectContext";
 import { useProjectsLogic } from "./useProjectsLogic";
 
 export default function ProjectButton() {
 
-  const { action, setAction } = useWebContext();
+  const { action, setAction } = useDialogContext();
   const { selectedProject } = useProjectContext();
 
   const logic = useProjectsLogic();
 
-  if (!action) return "None";
+  if (!action) return null;
 
   // ---------- ADD ----------
   if (action === "Add") {

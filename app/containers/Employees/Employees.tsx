@@ -1,5 +1,7 @@
 // ---------- IMPORTS ----------
 import "../containers.css";
+// Importing React Hooks
+import { useMemo } from "react";
 // Importing MUI Components
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,13 +18,15 @@ import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import EmployeeButton from "../../components/Buttons/Employees/EmployeesButton";
 // Importing Contexts
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
-import { useWebContext } from "@/app/context/WebContext";
+import { useDialogContext } from "@/app/context/DialogContext";
 import EmployeeAllocations from "./EmployeeAllocations";
 import { sortedlstofEmployees } from "./EmployeeFunctions";
 
+import { teamsAvailable } from "@/app/context/Types-Data/initialData";
+
 export default function Employees() {
-  const { setAction, assignment, setAssignment, orderBy, setOrderBy } =
-    useWebContext();
+  const { setAction, assignment, setAssignment } =
+    useDialogContext();
 
   const {
     lstofEmployees,
@@ -30,15 +34,19 @@ export default function Employees() {
     setSelectedEmployee,
     orderSection,
     setOrderSection,
+    orderBy,
+    setOrderBy,
   } = useEmployeeContext();
 
-  const teamsAvailable = [
-    "Not Defined",
-    "Team A",
-    "Team B",
-    "Team C",
-    "Team D",
-  ];
+  const handleSort = (section: string) => {
+    setOrderSection(section);
+    setOrderBy((prev) => (prev === "asc" ? "desc" : "asc"));
+  };
+
+  const sortedEmployees = useMemo(
+    () => sortedlstofEmployees(lstofEmployees, orderSection, orderBy),
+    [lstofEmployees, orderSection, orderBy]
+  );
 
   return (
     <div className="mainArea">
@@ -74,8 +82,7 @@ export default function Employees() {
                     active={orderSection === "name"}
                     direction={orderSection === "name" ? orderBy : "asc"}
                     onClick={() => {
-                      setOrderSection("name");
-                      setOrderBy((prev) => (prev === "asc" ? "desc" : "asc"));
+                      handleSort("name");
                     }}
                   >
                     Name
@@ -86,8 +93,7 @@ export default function Employees() {
                     active={orderSection === "date"}
                     direction={orderSection === "date" ? orderBy : "asc"}
                     onClick={() => {
-                      setOrderSection("date");
-                      setOrderBy((prev) => (prev === "asc" ? "desc" : "asc"));
+                      handleSort("date");
                     }}
                   >
                     Start Date
@@ -98,8 +104,7 @@ export default function Employees() {
                     active={orderSection === "role"}
                     direction={orderSection === "role" ? orderBy : "asc"}
                     onClick={() => {
-                      setOrderSection("role");
-                      setOrderBy((prev) => (prev === "asc" ? "desc" : "asc"));
+                      handleSort("role");
                     }}
                   >
                     Role
@@ -110,8 +115,7 @@ export default function Employees() {
                     active={orderSection === "team"}
                     direction={orderSection === "team" ? orderBy : "asc"}
                     onClick={() => {
-                      setOrderSection("team");
-                      setOrderBy((prev) => (prev === "asc" ? "desc" : "asc"));
+                      handleSort("team");
                     }}
                   >
                     Team
@@ -121,28 +125,26 @@ export default function Employees() {
               </TableRow>
             </TableHead>
             <TableBody className="TableBody">
-              {sortedlstofEmployees(lstofEmployees, orderSection, orderBy).map(
-                (employee) => (
-                  <TableRow
-                    className="TableRow"
-                    key={employee.name}
-                    selected={selectedEmployee?.name === employee.name}
-                    onClick={() => {
-                      setSelectedEmployee(employee);
-                    }}
-                  >
-                    <TableCell> {employee.name} </TableCell>
-                    <TableCell align="center">{employee.date}</TableCell>
-                    <TableCell align="center">{employee.role}</TableCell>
-                    <TableCell align="center">{employee.team}</TableCell>
-                    <TableCell align="center">
-                      <button onClick={() => setAssignment(true)}>
-                        Projects
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                )
-              )}
+              {sortedEmployees.map((employee) => (
+                <TableRow
+                  className="TableRow"
+                  key={employee.name}
+                  selected={selectedEmployee?.name === employee.name}
+                  onClick={() => {
+                    setSelectedEmployee(employee);
+                  }}
+                >
+                  <TableCell> {employee.name} </TableCell>
+                  <TableCell align="center">{employee.date}</TableCell>
+                  <TableCell align="center">{employee.role}</TableCell>
+                  <TableCell align="center">{employee.team}</TableCell>
+                  <TableCell align="center">
+                    <button onClick={() => setAssignment(true)}>
+                      Projects
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

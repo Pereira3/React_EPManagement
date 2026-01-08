@@ -6,21 +6,17 @@ import { Employee } from "../../../shared/types";
 // Importing Validation Functions
 import { validateEmployeeSubmit } from "../../Forms/formsValidation";
 // Importing Contexts
-import { useWebContext } from "@/app/context/WebContext";
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useProjectContext } from "@/app/context/ProjectContext";
+import { useDialogContext } from "@/app/context/DialogContext";
+import { useFormsContext } from "@/app/context/FormsContext";
+import { useErrorContext } from "@/app/context/ErrorContext";
+import { normalizedString } from "@/app/shared/utils";
 
 export function useEmployeesLogic() {
-  const {
-    action,
-    setAction,
-    formsValues,
-    setFormValues,
-    errorMessage,
-    setError,
-    errorNumber,
-    setErrorNumber,
-  } = useWebContext();
+  const { action, setAction } = useDialogContext();
+  const { formsValues, setFormValues } = useFormsContext();
+  const { errorMessage, setError, errorNumber, setErrorNumber } = useErrorContext();
   const {
     lstofEmployees,
     setEmployees,
@@ -101,8 +97,8 @@ export function useEmployeesLogic() {
       if (validation.isValid) {
         setEmployees((prev) => {
           return prev.map((employee) =>
-            employee.name.trim().toUpperCase() ===
-            selectedEmployee.name.trim().toUpperCase()
+            normalizedString(employee.name) ===
+            normalizedString(selectedEmployee.name)
               ? {
                   ...employee,
                   name: formsValues.name,
@@ -127,8 +123,8 @@ export function useEmployeesLogic() {
       setEmployees((prev) =>
         prev.filter(
           (emp) =>
-            emp.name.trim().toUpperCase() !==
-            selectedEmployee.name.trim().toUpperCase()
+            normalizedString(emp.name) !==
+            normalizedString(selectedEmployee.name)
         )
       );
 
@@ -139,8 +135,8 @@ export function useEmployeesLogic() {
                 ...project,
                 employees: project.employees.filter(
                   (proj) =>
-                    proj.emp.name.trim().toUpperCase() !==
-                    selectedEmployee.name.trim().toUpperCase()
+                    normalizedString(proj.emp.name) !==
+                    normalizedString(selectedEmployee.name)
                 ),
               }
             : project

@@ -1,5 +1,5 @@
 // ---------- IMPORTS ----------
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "../containers.css";
 // Importing MUI Components
 import {
@@ -21,7 +21,8 @@ import Forms from "../../components/Forms/Forms";
 // Importing Contexts
 import { useProjectContext } from "@/app/context/ProjectContext";
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
-import { useWebContext } from "@/app/context/WebContext";
+import { useDialogContext } from "@/app/context/DialogContext";
+import { useErrorContext } from "@/app/context/ErrorContext";
 // Importing Functions
 import {
   detachEmployee,
@@ -31,8 +32,8 @@ import {
 
 export default function Connections() {
   
-  const { setAssignment } = useWebContext();
-  
+  const { setAssignment } = useDialogContext();
+  const { errorMessage, setError, errorNumber, setErrorNumber } = useErrorContext();
   const { lstofEmployees, selectedEmployee, setSelectedEmployee } = useEmployeeContext();
 
   const {
@@ -42,15 +43,22 @@ export default function Connections() {
     setSelectedProject,
   } = useProjectContext();
 
-  // For error handling
-  const [errorMessage, setError] = useState<string>("");
-  const [errorNumber, setErrorNumber] = useState<number>(0);
-
   const [newEmployeeName, setNewEmployeeName] = useState<string>("");
   const [newAllocation, setNewAllocation] = useState<number>(0);
 
+  const availableEmployees = useMemo(
+    () => getProjectEmployeesList(lstofEmployees, selectedProject!),
+    [lstofEmployees, selectedProject]
+  );
+
   return (
-    <Dialog open={true} onClose={() => { setAssignment(false); setSelectedProject(null); }}>
+    <Dialog
+      open={true}
+      onClose={() => {
+        setAssignment(false);
+        setSelectedProject(null);
+      }}
+    >
       <DialogTitle>Project: {selectedProject!.name}</DialogTitle>
 
       <DialogContent>
@@ -97,10 +105,7 @@ export default function Connections() {
                 <TableCell>
                   <Forms
                     forms="dropdown"
-                    sets={getProjectEmployeesList(
-                      lstofEmployees,
-                      selectedProject!
-                    )}
+                    sets={availableEmployees}
                     value={newEmployeeName}
                     updt={(val) => setNewEmployeeName(val)}
                   />
@@ -135,8 +140,7 @@ export default function Connections() {
               setErrorNumber,
               errorNumber
             );
-          }
-          }
+          }}
         >
           Save
         </button>

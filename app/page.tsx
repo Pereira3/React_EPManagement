@@ -2,29 +2,26 @@
 // ---------- IMPORTS ----------
 import { useState } from "react";
 // Importing Components
-import NavBar from "./components/NavBar";
 import Employees from "./containers/Employees/Employees";
 import Projects from "./containers/Projects/Projects";
 
 //TODO: Explore Jester and Cypress
-//TODO: Husky recommended avoiding useSates in useEffects (EmployeesButton and ProjectsButton)
 //TODO: CSS Support for diferent resolutions
 
 export default function Page() {
   const [type, setType] = useState<"Employees" | "Projects">("Employees");
-  const [disabled, setDisable] = useState(0);
-  const handleDisablement = (button: number) => setDisable(button);
 
   return (
     <>
-      <NavBar />
+      <nav>
+        <h1>Employees & Projects Management</h1>
+      </nav>
 
       <main>
         <button
           className="topButton"
-          disabled={disabled === 0}
+          disabled={type==="Employees"}
           onClick={() => {
-            handleDisablement(0);
             setType("Employees");
           }}
         >
@@ -33,9 +30,8 @@ export default function Page() {
         |{" "}
         <button
           className="topButton"
-          disabled={disabled === 1}
+          disabled={type==="Projects"}
           onClick={() => {
-            handleDisablement(1);
             setType("Projects");
           }}
         >

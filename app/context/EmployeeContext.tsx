@@ -4,9 +4,7 @@ import { Employee } from "@/app/shared/types";
 import { EmployeeContextTypes } from "@/app/context/Types-Data/types";
 import { initialEmployees } from "./Types-Data/initialData";
 
-const EmployeeContext = createContext<EmployeeContextTypes | undefined>(
-  undefined
-);
+const EmployeeContext = createContext<EmployeeContextTypes | undefined>(undefined);
 
 export function EmployeeContextProvider({ children }: { children: ReactNode }) {
   // Created List of Employees initializated with initialData.ts file
@@ -14,7 +12,9 @@ export function EmployeeContextProvider({ children }: { children: ReactNode }) {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
+  
   const [orderSection, setOrderSection] = useState<string>("");
+  const [orderBy, setOrderBy] = useState<"asc" | "desc">("asc");
 
   return (
     <EmployeeContext.Provider
@@ -25,6 +25,8 @@ export function EmployeeContextProvider({ children }: { children: ReactNode }) {
         setSelectedEmployee,
         orderSection,
         setOrderSection,
+        orderBy,
+        setOrderBy,
       }}
     >
       {children}

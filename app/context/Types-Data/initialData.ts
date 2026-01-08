@@ -127,3 +127,11 @@ export const initialProjects: Project[] = [
   { name: "Humans" },
   { name: "Nature" },
 ];
+
+export const teamsAvailable = [
+    "Not Defined",
+    "Team A",
+    "Team B",
+    "Team C",
+    "Team D",
+];

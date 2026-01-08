@@ -1,5 +1,6 @@
 // ---------- IMPORTS ----------
 import "../containers.css";
+import { useMemo } from "react";
 // Importing MUI Components
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,19 +17,26 @@ import ProjectDetails from "@/app/containers/Projects/ProjectDetails";
 import ProjectsButton from "@/app/components/Buttons/Projects/ProjectsButton";
 // Importing Contexts
 import { useProjectContext } from "@/app/context/ProjectContext";
-import { useWebContext } from "@/app/context/WebContext";
+import { useDialogContext } from "@/app/context/DialogContext";
+import { TableSortLabel } from "@mui/material";
 
-// TODO: Missing sort feature
+import { sortedlstofProjects } from "./ProjectFunctions";
 
 export default function Projects() {
-  
-  const { assignment, setAssignment, setAction } = useWebContext();
-  
+  const { assignment, setAssignment, setAction } = useDialogContext();
+
   const {
     lstofProjects,
     selectedProject,
     setSelectedProject,
+    orderBy,
+    setOrderBy,
   } = useProjectContext();
+
+  const sortedProjects = useMemo(
+    () => sortedlstofProjects(lstofProjects, orderBy),
+    [lstofProjects, orderBy]
+  );
 
   return (
     <div className="mainArea">
@@ -51,12 +59,25 @@ export default function Projects() {
           <Table stickyHeader className="Table">
             <TableHead className="TableHead">
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy !== null}
+                    direction={orderBy || "asc"}
+                    onClick={() => {
+                      setOrderBy((prev) => {
+                        if (prev === null) return "asc";
+                        return prev === "asc" ? "desc" : "asc";
+                      });
+                    }}
+                  >
+                    Name
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody className="TableBody">
-              {lstofProjects.map((project) => (
+              {sortedProjects.map((project) => (
                 <TableRow
                   className="TableRow"
                   key={project.name}

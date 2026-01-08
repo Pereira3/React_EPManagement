@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { Employee, formsValues, Project } from "../../shared/types";
+import { normalizedString } from "@/app/shared/utils";
 
 // ---------- FORMS TEXT VALIDATION ----------
 const validateEmpText = (
@@ -9,7 +10,7 @@ const validateEmpText = (
   minLength: number,
   maxLength: number
 ): { isValid: boolean; error: string } => {
-  const templatedName = name.trim().toUpperCase();
+  const templatedName = normalizedString(name);
 
   if (!name || name.trim().length <= minLength) {
     return {
@@ -27,8 +28,8 @@ const validateEmpText = (
 
   const isDuplicated = employees?.some(
     (listName) =>
-      listName.name.trim().toUpperCase() === templatedName &&
-      listName.name.trim().toUpperCase() !== excludeName?.trim().toUpperCase()
+      normalizedString(listName.name) === templatedName &&
+      normalizedString(listName.name) !== normalizedString(excludeName || "")
   );
   if (isDuplicated && excludeName !== name) {
     return { isValid: false, error: "Employee already exists in database." };
@@ -71,7 +72,7 @@ const validateDate = (
 };
 
 // ---------- FORMS NUMBER VALIDATION ----------
-export const validateNumber = (
+const validateNumber = (
   employee: Employee,
   listProjects: Project[],
   value: number,
@@ -96,7 +97,7 @@ export const validateNumber = (
   listProjects.forEach((project) => {
     project.employees?.forEach((e) => {
       if (
-        e.emp.name.trim().toUpperCase() === employee.name.trim().toUpperCase()
+        normalizedString(e.emp.name) === normalizedString(employee.name)
       ) {
         empTotalAllocation += e.allocation;
       }
@@ -150,7 +151,7 @@ export const validateProjectSubmit = (
   minLength: number,
   maxLength: number
 ): { isValid: boolean; error: string } => {
-  const templatedName = name.trim().toUpperCase();
+  const templatedName = normalizedString(name);
 
   if (!name || name.trim().length <= minLength) {
     return {
@@ -167,7 +168,7 @@ export const validateProjectSubmit = (
   }
 
   const isDuplicated = projects?.some(
-    (listName) => listName.name.trim().toUpperCase() === templatedName
+    (listName) => normalizedString(listName.name) === templatedName
   );
   if (isDuplicated) {
     return { isValid: false, error: "Project already exists in database." };
@@ -185,7 +186,7 @@ export const validateConnectionSubmit = (
 ): { isValid: boolean; error: string } => {
   const isAlreadyAssigned = project.employees?.some(
     (e) =>
-      e.emp.name.trim().toUpperCase() === employee.name.trim().toUpperCase()
+      normalizedString(e.emp.name) === normalizedString(employee.name)
   );
   if (isAlreadyAssigned) {
     return {

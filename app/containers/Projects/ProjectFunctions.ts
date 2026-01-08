@@ -1,6 +1,28 @@
 import { Employee, Project } from "@/app/shared/types";
 import { validateConnectionSubmit } from "../../components/Forms/formsValidation";
 
+import { normalizedString } from "@/app/shared/utils";
+
+/* 
+Returns the list of sorted Projects based on the orderBy value (asc or desc)
+Sort function expects a number so localeCompare is needed
+*/
+export function sortedlstofProjects(
+  lstofProjects: Project[],
+  orderBy: "asc" | "desc" | null
+): Project[] {
+  if (!orderBy) return lstofProjects;
+
+  return [...lstofProjects].toSorted((a, b) => {
+    const valueA = normalizedString(a.name);
+    const valueB = normalizedString(b.name);
+
+    return orderBy === "asc"
+      ? valueA.localeCompare(valueB)
+      : valueB.localeCompare(valueA);
+  });
+}
+
 /* 
 Returns an array of employee names that are not assigned to the project
 after filtering the whole employee list to only include that specific employees
@@ -10,7 +32,10 @@ export function getProjectEmployeesList(
   project: Project
 ): string[] {
   const validEmployeeDropdown = listEmployees?.filter(
-    (emp) => !project.employees?.some((pe) => pe.emp.name === emp.name)
+    (emp) =>
+      !project.employees?.some(
+        (pe) => normalizedString(pe.emp.name) === normalizedString(emp.name)
+      )
   );
 
   return validEmployeeDropdown?.map((emp) => emp.name);
@@ -23,13 +48,13 @@ export function detachEmployee(
 ) {
   setProjects((prev) =>
     prev.map((p) =>
-      p.name.trim().toUpperCase() === project.name.trim().toUpperCase()
+      normalizedString(p.name) === normalizedString(project.name)
         ? {
             ...p,
             employees: p.employees?.filter(
               (e) =>
-                e.emp.name.trim().toUpperCase() !==
-                employee.emp.name.trim().toUpperCase()
+                normalizedString(e.emp.name) !==
+                normalizedString(employee.emp.name)
             ),
           }
         : p
@@ -49,7 +74,6 @@ export function handleAttachEmployee(
   setErrorNumber: React.Dispatch<React.SetStateAction<number>>,
   errorNumber: number
 ): void {
-
   const employee = lstofEmployees.find((e) => e.name === newEmployeeName);
   if (!employee) return;
 
@@ -63,8 +87,8 @@ export function handleAttachEmployee(
   if (validConnection.isValid) {
     setProjects((prev) =>
       prev.map((project) =>
-        project.name.trim().toUpperCase() ===
-        selectedProject.name.trim().toUpperCase()
+        normalizedString(project.name) ===
+        normalizedString(selectedProject.name)
           ? {
               ...project,
               employees: [

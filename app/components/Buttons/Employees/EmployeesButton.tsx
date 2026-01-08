@@ -8,12 +8,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Forms from "@/app/components/Forms/Forms";
 // Importing Contexts
-import { useWebContext } from "@/app/context/WebContext";
+import { useDialogContext } from "@/app/context/DialogContext";
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useEmployeesLogic } from "./useEmployeesLogic";
 
 export default function EmployeesButton({ sets }: { sets: string[] }) {
-  const { action, setAction } = useWebContext();
+  const { action, setAction } = useDialogContext();
   const { selectedEmployee} = useEmployeeContext();
   const logic = useEmployeesLogic();
 

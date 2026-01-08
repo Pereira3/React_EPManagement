@@ -1,18 +1,22 @@
 import { actions, Employee, formsValues, Project } from "../../shared/types";
 
-export type WebContextTypes = {
+export type DialogContextTypes = {
   assignment: boolean;
   setAssignment: React.Dispatch<React.SetStateAction<boolean>>;
   action: actions;
   setAction: React.Dispatch<React.SetStateAction<actions>>;
+};
+
+export type FormsContextTypes = {
   formsValues: formsValues;
   setFormValues: React.Dispatch<React.SetStateAction<formsValues>>;
+};
+
+export type ErrorContextTypes = {
   errorMessage: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
   errorNumber: number;
   setErrorNumber: React.Dispatch<React.SetStateAction<number>>;
-  orderBy: "asc" | "desc";
-  setOrderBy: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 };
 
 export type EmployeeContextTypes = {
@@ -22,6 +26,8 @@ export type EmployeeContextTypes = {
   setSelectedEmployee: React.Dispatch<React.SetStateAction<Employee | null>>;
   orderSection: string;
   setOrderSection: React.Dispatch<React.SetStateAction<string>>;
+  orderBy: "asc" | "desc";
+  setOrderBy: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 };
 
 export type ProjectContextTypes = {
@@ -29,4 +35,6 @@ export type ProjectContextTypes = {
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   selectedProject: Project | null;
   setSelectedProject: React.Dispatch<React.SetStateAction<Project | null>>;
+  orderBy: "asc" | "desc" | null;
+  setOrderBy: React.Dispatch<React.SetStateAction<"asc" | "desc" | null>>;
 };
