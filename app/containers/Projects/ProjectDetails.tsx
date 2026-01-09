@@ -1,5 +1,5 @@
 // ---------- IMPORTS ----------
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import "../containers.css";
 // Importing MUI Components
 import {
@@ -26,30 +26,24 @@ import { useErrorContext } from "@/app/context/ErrorContext";
 // Importing Functions
 import {
   detachEmployee,
-  getProjectEmployeesList,
+  useGetterProjectEmployeesList,
   handleAttachEmployee,
 } from "./ProjectFunctions";
 
 export default function Connections() {
-  
   const { setAssignment } = useDialogContext();
-  const { errorMessage, setError, errorNumber, setErrorNumber } = useErrorContext();
-  const { lstofEmployees, selectedEmployee, setSelectedEmployee } = useEmployeeContext();
+  const { errorMessage, setError, errorNumber, setErrorNumber } =
+    useErrorContext();
+  const { selectedEmployee, setSelectedEmployee, lstofEmployees } =
+    useEmployeeContext();
 
-  const {
-    lstofProjects,
-    setProjects,
-    selectedProject,
-    setSelectedProject,
-  } = useProjectContext();
+  const { selectedProject, setSelectedProject, lstofProjects, setProjects } =
+    useProjectContext();
 
   const [newEmployeeName, setNewEmployeeName] = useState<string>("");
   const [newAllocation, setNewAllocation] = useState<number>(0);
 
-  const availableEmployees = useMemo(
-    () => getProjectEmployeesList(lstofEmployees, selectedProject!),
-    [lstofEmployees, selectedProject]
-  );
+  const availableEmployees = useGetterProjectEmployeesList();
 
   return (
     <Dialog
@@ -92,7 +86,7 @@ export default function Connections() {
                     <LinkOffIcon
                       onClick={(e) => {
                         e.stopPropagation();
-                        detachEmployee(setProjects, selectedProject!, employee);
+                        detachEmployee(employee, selectedProject!, setProjects);
                         setAssignment(false);
                       }}
                     ></LinkOffIcon>

@@ -1,28 +1,58 @@
 import dayjs from "dayjs";
 import { Employee, formsValues, Project } from "../../shared/types";
 import { normalizedString } from "@/app/shared/utils";
+import {
+  teamsAvailable,
+  rolesAvailable,
+  minEmpNameLength,
+  maxEmpNameLength,
+  minProjNameLength,
+  maxProjNameLength,
+} from "@/app/context/Types-Data/initialData";
+
+// ---------- CONSTANTS ----------
 
 // ---------- FORMS TEXT VALIDATION ----------
 const validateEmpText = (
   employees: Employee[],
-  name: string,
-  excludeName: string | undefined,
-  minLength: number,
-  maxLength: number
+  field: string,
+  fieldValue: string,
+  excludeName: string | undefined
 ): { isValid: boolean; error: string } => {
-  const templatedName = normalizedString(name);
+  const templatedName = normalizedString(fieldValue);
 
-  if (!name || name.trim().length <= minLength) {
+  if (
+    field === "name" &&
+    (!fieldValue || fieldValue.trim().length <= minEmpNameLength)
+  ) {
     return {
       isValid: false,
-      error: `Minimum of ${minLength + 1} character required.`,
+      error: `Minimum of ${minEmpNameLength + 1} character required.`,
     };
   }
 
-  if (maxLength && name.trim().length > maxLength) {
+  if (
+    field === "name" &&
+    maxEmpNameLength &&
+    fieldValue.trim().length > maxEmpNameLength
+  ) {
     return {
       isValid: false,
-      error: `Maximum ${maxLength} characters allowed.`,
+      error: `Maximum ${maxEmpNameLength} characters allowed.`,
+    };
+  }
+
+  if (field === "team" && !teamsAvailable.includes(fieldValue)) {
+    return {
+      isValid: false,
+      error: `Team not known.`,
+    };
+  }
+
+  if (field === "role" && !rolesAvailable.includes(fieldValue)) {
+    return {
+      isValid: false,
+      error: `Role not known.`,
     };
   }
 
@@ -31,7 +61,7 @@ const validateEmpText = (
       normalizedString(listName.name) === templatedName &&
       normalizedString(listName.name) !== normalizedString(excludeName || "")
   );
-  if (isDuplicated && excludeName !== name) {
+  if (isDuplicated && normalizedString(excludeName || "") !== templatedName) {
     return { isValid: false, error: "Employee already exists in database." };
   }
 
@@ -45,7 +75,7 @@ const validateDate = (
   maxDate: string
 ): { isValid: boolean; error: string } => {
   if (date === "") {
-    return { isValid: false, error: "Date not Inserted." };
+    return { isValid: false, error: "Date not inserted or not valid." };
   }
 
   // To compare the dates, had to convert them to dayjs objects
@@ -57,14 +87,14 @@ const validateDate = (
   if (parsedDate.isBefore(parsedMin)) {
     return {
       isValid: false,
-      error: `Date must be after ${minDate}`,
+      error: `Date must be after ${minDate}.`,
     };
   }
 
   if (parsedDate.isAfter(parsedMax)) {
     return {
       isValid: false,
-      error: `Date must be before ${maxDate}`,
+      error: `Date must be before ${maxDate}.`,
     };
   }
 
@@ -75,9 +105,7 @@ const validateDate = (
 const validateNumber = (
   employee: Employee,
   listProjects: Project[],
-  value: number,
-  min: number,
-  max: number
+  value: number
 ): { isValid: boolean; error: string } => {
   let empTotalAllocation = 0;
 
@@ -85,20 +113,18 @@ const validateNumber = (
     return { isValid: false, error: "Must be a valid number." };
   }
 
-  if (value < min) {
-    return { isValid: false, error: `Minimum value is ${min}.` };
+  if (value < 1) {
+    return { isValid: false, error: `Minimum value is 1.` };
   }
 
-  if (value > max) {
-    return { isValid: false, error: `Maximum value is ${max}.` };
+  if (value > 100) {
+    return { isValid: false, error: `Maximum value is 100.` };
   }
 
   // For each project where the employee is assigned, sum the allocation of the employee
   listProjects.forEach((project) => {
     project.employees?.forEach((e) => {
-      if (
-        normalizedString(e.emp.name) === normalizedString(employee.name)
-      ) {
+      if (normalizedString(e.emp.name) === normalizedString(employee.name)) {
         empTotalAllocation += e.allocation;
       }
     });
@@ -122,16 +148,26 @@ export const validateEmployeeSubmit = (
 ): { isValid: boolean; error: string } => {
   const nameValidation = validateEmpText(
     employees,
+    "name",
     formsValues.name,
-    excludeName,
-    1,
-    30
+    excludeName
   );
-
   const dateValidation = validateDate(
     formsValues.date,
     dayjs().subtract(70, "year").format("DD-MM-YYYY"),
     dayjs().format("DD-MM-YYYY")
+  );
+  const teamValidation = validateEmpText(
+    employees,
+    "team",
+    formsValues.team,
+    excludeName
+  );
+  const roleValidation = validateEmpText(
+    employees,
+    "role",
+    formsValues.role,
+    excludeName
   );
 
   if (!nameValidation.isValid) {
@@ -140,30 +176,33 @@ export const validateEmployeeSubmit = (
   if (!dateValidation.isValid) {
     return { isValid: false, error: dateValidation.error };
   }
-  
+  if (!teamValidation.isValid) {
+    return { isValid: false, error: teamValidation.error };
+  }
+  if (!roleValidation.isValid) {
+    return { isValid: false, error: roleValidation.error };
+  }
+
   return { isValid: true, error: "" };
 };
 
 // ---------- SUBMIT PROJECT VALIDATION ----------
 export const validateProjectSubmit = (
   projects: Project[],
-  name: string,
-  minLength: number,
-  maxLength: number
+  name: string
 ): { isValid: boolean; error: string } => {
   const templatedName = normalizedString(name);
-
-  if (!name || name.trim().length <= minLength) {
+  if (!name || name.trim().length <= minProjNameLength) {
     return {
       isValid: false,
-      error: `Minimum of ${minLength + 1} character required.`,
+      error: `Minimum of ${minProjNameLength + 1} character required.`,
     };
   }
 
-  if (maxLength && name.trim().length > maxLength) {
+  if (maxProjNameLength && name.trim().length > maxProjNameLength) {
     return {
       isValid: false,
-      error: `Maximum ${maxLength} characters allowed.`,
+      error: `Maximum ${maxProjNameLength} characters allowed.`,
     };
   }
 
@@ -184,9 +223,38 @@ export const validateConnectionSubmit = (
   listProjects: Project[],
   allocation: number
 ): { isValid: boolean; error: string } => {
+  
+  if (!employee) {
+    return { isValid: false, error: "Employee not found or not identified." };
+  }
+
+  const projectInList = listProjects.find(
+    (p) => normalizedString(p.name) === normalizedString(project.name)
+  );
+  if (!projectInList) {
+    return { isValid: false, error: "Project not found in list." };
+  }
+
+  // Compare employee lists by content, not reference
+  if (project.employees?.length !== projectInList.employees?.length) {
+    return { isValid: false, error: "Project Employees list lengths inconsistent." };
+  }
+
+  const allEmployeesMatch = project.employees?.every((projEmp) =>
+    projectInList.employees?.some(
+      (listEmp) =>
+        normalizedString(projEmp.emp.name) ===
+          normalizedString(listEmp.emp.name) &&
+        projEmp.allocation === listEmp.allocation
+    )
+  );
+
+  if (!allEmployeesMatch) {
+    return { isValid: false, error: "Project Employees are inconsistent." };
+  }
+
   const isAlreadyAssigned = project.employees?.some(
-    (e) =>
-      normalizedString(e.emp.name) === normalizedString(employee.name)
+    (e) => normalizedString(e.emp.name) === normalizedString(employee.name)
   );
   if (isAlreadyAssigned) {
     return {
@@ -195,13 +263,7 @@ export const validateConnectionSubmit = (
     };
   }
 
-  const validateAllocation = validateNumber(
-    employee,
-    listProjects,
-    allocation,
-    1,
-    100
-  );
+  const validateAllocation = validateNumber(employee, listProjects, allocation);
   if (!validateAllocation.isValid) {
     return { isValid: false, error: validateAllocation.error };
   }

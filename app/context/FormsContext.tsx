@@ -32,7 +32,9 @@ export function FormsContextProvider({ children }: { children: ReactNode }) {
 export function useFormsContext() {
   const context = useContext(FormsContext);
   if (context === undefined) {
-    throw new Error("useFormsContext must be used within a FormsContextProvider.");
+    throw new Error(
+      "useFormsContext must be used within a FormsContextProvider."
+    );
   }
   return context;
 }

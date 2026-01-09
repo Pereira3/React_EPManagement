@@ -1,6 +1,11 @@
 import { Employee, Project } from "../../shared/types";
 import dayjs from "dayjs";
 
+export const minEmpNameLength = 1;
+export const maxEmpNameLength = 30;
+export const minProjNameLength = 0;
+export const maxProjNameLength = 15;
+
 // Initial Employee data
 export const initialEmployees: Employee[] = [
   {
@@ -129,9 +134,17 @@ export const initialProjects: Project[] = [
 ];
 
 export const teamsAvailable = [
-    "Not Defined",
-    "Team A",
-    "Team B",
-    "Team C",
-    "Team D",
+  "Not Defined",
+  "Team A",
+  "Team B",
+  "Team C",
+  "Team D",
+];
+
+export const rolesAvailable = [
+  "None",
+  "Junior Engineer",
+  "Senior Engineer",
+  "Project Manager",
+  "Team Manager",
 ];

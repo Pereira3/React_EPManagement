@@ -71,30 +71,9 @@ button:not(.actionButton) {
   }
 }
 
-/* SIZES DEFINED AND COPIED FROM W3Schools
-https://www.w3schools.com/howto/howto_css_media_query_breakpoints.asp */
-
-/* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
-  
-}
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-
-}
-
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-
-}
-
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-
-}
-
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {
-
+/* Small devices (Devices like Galaxy Fold and Galaxy S8+) */
+@media only screen and (min-width: 320px) and (max-width: 370px) {
+  .managementButtons button span {
+    display: none;
+  }
 }

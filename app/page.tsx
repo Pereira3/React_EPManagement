@@ -5,8 +5,9 @@ import { useState } from "react";
 import Employees from "./containers/Employees/Employees";
 import Projects from "./containers/Projects/Projects";
 
-//TODO: Explore Jester and Cypress
-//TODO: CSS Support for diferent resolutions
+//TODO: When changing name the employee becames orphanated, the projects will not have the name updated
+//TODO: Remove null usage, X! can crash -> Add null checks
+//TODO: Explore testing of components and functions (EmployeesFunctions.ts and ProjectFunctions.ts)
 
 export default function Page() {
   const [type, setType] = useState<"Employees" | "Projects">("Employees");
@@ -20,7 +21,7 @@ export default function Page() {
       <main>
         <button
           className="topButton"
-          disabled={type==="Employees"}
+          disabled={type === "Employees"}
           onClick={() => {
             setType("Employees");
           }}
@@ -30,7 +31,7 @@ export default function Page() {
         |{" "}
         <button
           className="topButton"
-          disabled={type==="Projects"}
+          disabled={type === "Projects"}
           onClick={() => {
             setType("Projects");
           }}

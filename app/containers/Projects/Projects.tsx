@@ -1,6 +1,5 @@
 // ---------- IMPORTS ----------
 import "../containers.css";
-import { useMemo } from "react";
 // Importing MUI Components
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -20,23 +19,19 @@ import { useProjectContext } from "@/app/context/ProjectContext";
 import { useDialogContext } from "@/app/context/DialogContext";
 import { TableSortLabel } from "@mui/material";
 
-import { sortedlstofProjects } from "./ProjectFunctions";
+import { useSortedlstofProjects } from "./ProjectFunctions";
 
 export default function Projects() {
   const { assignment, setAssignment, setAction } = useDialogContext();
 
   const {
-    lstofProjects,
     selectedProject,
     setSelectedProject,
     orderBy,
     setOrderBy,
   } = useProjectContext();
 
-  const sortedProjects = useMemo(
-    () => sortedlstofProjects(lstofProjects, orderBy),
-    [lstofProjects, orderBy]
-  );
+  const sortedProjects = useSortedlstofProjects();
 
   return (
     <div className="mainArea">

@@ -40,7 +40,7 @@ export function useProjectsLogic() {
   const handleAddSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const validation = validateProjectSubmit(lstofProjects, projectName, 0, 10);
+    const validation = validateProjectSubmit(lstofProjects, projectName);
 
     // Check for duplicates
     if (validation.isValid) {

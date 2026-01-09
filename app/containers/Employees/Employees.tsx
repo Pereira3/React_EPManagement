@@ -1,7 +1,5 @@
 // ---------- IMPORTS ----------
 import "../containers.css";
-// Importing React Hooks
-import { useMemo } from "react";
 // Importing MUI Components
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -20,7 +18,7 @@ import EmployeeButton from "../../components/Buttons/Employees/EmployeesButton";
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useDialogContext } from "@/app/context/DialogContext";
 import EmployeeAllocations from "./EmployeeAllocations";
-import { sortedlstofEmployees } from "./EmployeeFunctions";
+import { useSortedlstofEmployees } from "./EmployeeFunctions";
 
 import { teamsAvailable } from "@/app/context/Types-Data/initialData";
 
@@ -29,7 +27,6 @@ export default function Employees() {
     useDialogContext();
 
   const {
-    lstofEmployees,
     selectedEmployee,
     setSelectedEmployee,
     orderSection,
@@ -43,10 +40,7 @@ export default function Employees() {
     setOrderBy((prev) => (prev === "asc" ? "desc" : "asc"));
   };
 
-  const sortedEmployees = useMemo(
-    () => sortedlstofEmployees(lstofEmployees, orderSection, orderBy),
-    [lstofEmployees, orderSection, orderBy]
-  );
+  const sortedEmployees = useSortedlstofEmployees();
 
   return (
     <div className="mainArea">

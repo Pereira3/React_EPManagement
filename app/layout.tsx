@@ -37,9 +37,7 @@ export default function RootLayout({
           <EmployeeContextProvider>
             <DialogContextProvider>
               <FormsContextProvider>
-                <ErrorContextProvider>
-                  {children}
-                </ErrorContextProvider>
+                <ErrorContextProvider>{children}</ErrorContextProvider>
               </FormsContextProvider>
             </DialogContextProvider>
           </EmployeeContextProvider>

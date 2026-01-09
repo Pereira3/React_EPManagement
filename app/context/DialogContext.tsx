@@ -29,7 +29,9 @@ export function DialogContextProvider({ children }: { children: ReactNode }) {
 export function useDialogContext() {
   const context = useContext(DialogContext);
   if (context === undefined) {
-    throw new Error("useDialogContext must be used within a DialogContextProvider.");
+    throw new Error(
+      "useDialogContext must be used within a DialogContextProvider."
+    );
   }
   return context;
 }

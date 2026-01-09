@@ -28,7 +28,9 @@ export function ErrorContextProvider({ children }: { children: ReactNode }) {
 export function useErrorContext() {
   const context = useContext(ErrorContext);
   if (context === undefined) {
-    throw new Error("useErrorContext must be used within a ErrorContextProvider.");
+    throw new Error(
+      "useErrorContext must be used within a ErrorContextProvider."
+    );
   }
   return context;
 }
