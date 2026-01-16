@@ -1,45 +1,37 @@
-"use client";
-import { createContext, useContext, useState, ReactNode } from "react";
-import { Project } from "@/app/shared/types";
-import { ProjectContextTypes } from "@/app/context/Types-Data/types";
-import { initialProjects } from "@/app/context/Types-Data/initialData";
+// For avoiding storage to be deleted when reloading the page, we can use zustand with persist middleware, just remove the comments bellow
+// This saves the data on the local browser storage
+import { create } from "zustand";
+//import { persist, createJSONStorage } from "zustand/middleware";
+import { Employee } from "./EmployeeContext";
+import { initialProjects } from "./data/initialData";
 
-// Create the context
-const ProjectContext = createContext<ProjectContextTypes | undefined>(
-  undefined
+export type Project = {
+  name: string;
+  employees?: { emp: Employee; allocation: number }[];
+};
+
+interface ProjectTypes {
+  lstofProjects: Project[];
+  setProjects: (lstofProjects: Project[]) => void;
+  selectedProject: Project | null;
+  setSelectedProject: (selectedProject: Project | null) => void;
+  orderBy: "asc" | "desc";
+  setOrderBy: (orderBy: "asc" | "desc") => void;
+}
+
+export const useProjectContext = create<ProjectTypes>()(
+  //persist(
+  (set) => ({
+    lstofProjects: initialProjects,
+    setProjects: (lstofProjects) => set({ lstofProjects }),
+    selectedProject: null,
+    setSelectedProject: (selectedProject) => set({ selectedProject }),
+    orderBy: "asc",
+    setOrderBy: (orderBy) => set({ orderBy }),
+  })
+  /*{
+      name: "employee-storage", // localStorage key
+      storage: createJSONStorage(() => localStorage), // can use sessionStorage too
+    }
+  )*/
 );
-
-// Provider component
-export function ProjectContextProvider({ children }: { children: ReactNode }) {
-  // Created List of Projects initializated with initialData.ts file
-  const [lstofProjects, setProjects] = useState<Project[]>(initialProjects);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-
-  const [orderBy, setOrderBy] = useState<"asc" | "desc" | null>(null);
-
-  return (
-    <ProjectContext.Provider
-      value={{
-        lstofProjects,
-        setProjects,
-        selectedProject,
-        setSelectedProject,
-        orderBy,
-        setOrderBy,
-      }}
-    >
-      {children}
-    </ProjectContext.Provider>
-  );
-}
-
-// Custom hook to use the context
-export function useProjectContext() {
-  const context = useContext(ProjectContext);
-  if (context === undefined) {
-    throw new Error(
-      "useProjectContext must be used within a ProjectContextProvider."
-    );
-  }
-  return context;
-}

@@ -1,5 +1,5 @@
 // ---------- IMPORTS ----------
-import "../../../containers/containers.css";
+import "../containers.css";
 // Importing MUI Components
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -9,16 +9,18 @@ import { DialogContentText } from "@mui/material";
 // Importing Components
 import Forms from "@/app/components/Forms/Forms";
 // Importing Contexts
-import { useDialogContext } from "@/app/context/DialogContext";
 import { useProjectContext } from "@/app/context/ProjectContext";
+import { useDialogContext } from "@/app/context/DialogContext";
 import { useProjectsLogic } from "./useProjectsLogic";
+import { useErrorContext } from "@/app/context/ErrorContext";
 
 export default function ProjectButton() {
 
   const { action, setAction } = useDialogContext();
   const { selectedProject } = useProjectContext();
 
-  const logic = useProjectsLogic();
+  const { errorMessage, errorNumber } = useErrorContext();
+  const { clearSelectionsAndErrors, handleAddSubmit, handleChange, handleDelete, projectName } = useProjectsLogic();
 
   if (!action) return null;
 
@@ -28,22 +30,22 @@ export default function ProjectButton() {
       <Dialog
         open={true}
         onClose={() => {
-          logic.clearSelectionsAndErrors();
+          clearSelectionsAndErrors();
         }}
       >
         <DialogTitle>Add Project</DialogTitle>
         <DialogContent>
-          {logic.errorMessage && (
+          {errorMessage && (
             <DialogContentText>
-              {logic.errorMessage + " (" + logic.errorNumber + ")"}
+              {errorMessage + " (" + errorNumber + ")"}
             </DialogContentText>
           )}
-          <form onSubmit={logic.handleAddSubmit} id="addProject-form">
+          <form onSubmit={handleAddSubmit} id="addProject-form">
             <Forms
               forms="text"
               setName="Name"
-              value={logic.projectName}
-              updt={(val) => logic.handleChange(val)}
+              value={projectName}
+              updt={(val) => handleChange(val)}
             />
           </form>
         </DialogContent>
@@ -53,7 +55,7 @@ export default function ProjectButton() {
           </button>
           <button
             onClick={() => {
-              logic.clearSelectionsAndErrors();
+              clearSelectionsAndErrors();
             }}
           >
             Cancel
@@ -70,7 +72,7 @@ export default function ProjectButton() {
         <Dialog
           open={true}
           onClose={() => {
-            logic.clearSelectionsAndErrors();
+            clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Delete Project</DialogTitle>
@@ -79,16 +81,16 @@ export default function ProjectButton() {
             <strong>{selectedProject.name}</strong> and all employees allocation associated to it?
           </DialogContent>
           <DialogActions>
-            <button className="actionButton" onClick={logic.handleDelete}>
+            <button className="actionButton" onClick={handleDelete}>
               Delete
             </button>
-            <button onClick={() => logic.clearSelectionsAndErrors() }>Cancel</button>
+            <button onClick={() => clearSelectionsAndErrors() }>Cancel</button>
           </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open={true} onClose={() => logic.clearSelectionsAndErrors()}>
+        <Dialog open={true} onClose={() => clearSelectionsAndErrors()}>
           <DialogTitle>Project Not Selected</DialogTitle>
           <DialogContent>
             You have to select one project to be able to delete it.

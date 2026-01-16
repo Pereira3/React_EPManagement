@@ -23,27 +23,23 @@ import { useProjectContext } from "@/app/context/ProjectContext";
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useDialogContext } from "@/app/context/DialogContext";
 import { useErrorContext } from "@/app/context/ErrorContext";
-// Importing Functions
-import {
-  detachEmployee,
-  useGetterProjectEmployeesList,
-  handleAttachEmployee,
-} from "./ProjectFunctions";
+import { useProjectsLogic } from "./useProjectsLogic";
+
 
 export default function Connections() {
   const { setAssignment } = useDialogContext();
-  const { errorMessage, setError, errorNumber, setErrorNumber } =
+  const { errorMessage, errorNumber} =
     useErrorContext();
-  const { selectedEmployee, setSelectedEmployee, lstofEmployees } =
+  const { selectedEmployee, setSelectedEmployee } =
     useEmployeeContext();
 
-  const { selectedProject, setSelectedProject, lstofProjects, setProjects } =
+  const { selectedProject, setSelectedProject } =
     useProjectContext();
 
   const [newEmployeeName, setNewEmployeeName] = useState<string>("");
   const [newAllocation, setNewAllocation] = useState<number>(0);
 
-  const availableEmployees = useGetterProjectEmployeesList();
+  const { clearSelectionsAndErrors, detachEmployee, useGetterProjectEmployeesList, handleAttachEmployee } = useProjectsLogic();
 
   return (
     <Dialog
@@ -53,7 +49,7 @@ export default function Connections() {
         setSelectedProject(null);
       }}
     >
-      <DialogTitle>Project: {selectedProject!.name}</DialogTitle>
+      <DialogTitle>Project: {selectedProject ? selectedProject.name : ""}</DialogTitle>
 
       <DialogContent>
         {errorMessage && (
@@ -73,7 +69,7 @@ export default function Connections() {
 
             <TableBody className="TableBody">
               {/* If the project has employees assigned, it will display the required data */}
-              {selectedProject!.employees?.map((employee) => (
+              {selectedProject?.employees?.map((employee) => (
                 <TableRow
                   className="TableRow"
                   key={employee.emp.name}
@@ -86,7 +82,7 @@ export default function Connections() {
                     <LinkOffIcon
                       onClick={(e) => {
                         e.stopPropagation();
-                        detachEmployee(employee, selectedProject!, setProjects);
+                        detachEmployee();
                         setAssignment(false);
                       }}
                     ></LinkOffIcon>
@@ -99,7 +95,7 @@ export default function Connections() {
                 <TableCell>
                   <Forms
                     forms="dropdown"
-                    sets={availableEmployees}
+                    sets={useGetterProjectEmployeesList()}
                     value={newEmployeeName}
                     updt={(val) => setNewEmployeeName(val)}
                   />
@@ -125,14 +121,6 @@ export default function Connections() {
             handleAttachEmployee(
               newEmployeeName,
               newAllocation,
-              lstofEmployees,
-              lstofProjects,
-              selectedProject!,
-              setProjects,
-              setAssignment,
-              setError,
-              setErrorNumber,
-              errorNumber
             );
           }}
         >
@@ -140,10 +128,7 @@ export default function Connections() {
         </button>
         <button
           onClick={() => {
-            setAssignment(false);
-            setError("");
-            setErrorNumber(0);
-            setSelectedProject(null);
+            clearSelectionsAndErrors();
           }}
         >
           Cancel

@@ -1,48 +1,42 @@
-"use client";
-import { createContext, useContext, useState, ReactNode } from "react";
-import { Employee } from "@/app/shared/types";
-import { EmployeeContextTypes } from "@/app/context/Types-Data/types";
-import { initialEmployees } from "./Types-Data/initialData";
+// For avoiding storage to be deleted when reloading the page, we can use zustand with persist middleware, just remove the comments bellow
+// This saves the data on the local browser storage
+import { create } from "zustand";
+//import { persist, createJSONStorage } from "zustand/middleware";
+import { initialEmployees } from "./data/initialData";
 
-const EmployeeContext = createContext<EmployeeContextTypes | undefined>(
-  undefined
+export type Employee = {
+  name: string;
+  date: string;
+  role: string;
+  team: string;
+};
+
+interface EmployeeTypes {
+  lstofEmployees: Employee[];
+  setEmployees: (lstofEmployees: Employee[]) => void;
+  selectedEmployee: Employee | null;
+  setSelectedEmployee: (selectedEmployee: Employee | null) => void;
+  orderSection: string;
+  setOrderSection: (orderSection: string) => void;
+  orderBy: "asc" | "desc";
+  setOrderBy: (orderBy: "asc" | "desc") => void;
+}
+
+export const useEmployeeContext = create<EmployeeTypes>()(
+  //persist(
+  (set) => ({
+    lstofEmployees: initialEmployees,
+    selectedEmployee: null,
+    orderSection: "",
+    orderBy: "asc",
+    setEmployees: (lstofEmployees) => set({ lstofEmployees }),
+    setSelectedEmployee: (selectedEmployee) => set({ selectedEmployee }),
+    setOrderSection: (orderSection) => set({ orderSection }),
+    setOrderBy: (orderBy) => set({ orderBy }),
+  })
+  /*{
+      name: "employee-storage", // localStorage key
+      storage: createJSONStorage(() => localStorage), // can use sessionStorage too
+    }
+  )*/
 );
-
-export function EmployeeContextProvider({ children }: { children: ReactNode }) {
-  // Created List of Employees initializated with initialData.ts file
-  const [lstofEmployees, setEmployees] = useState<Employee[]>(initialEmployees);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
-
-  const [orderSection, setOrderSection] = useState<string>("");
-  const [orderBy, setOrderBy] = useState<"asc" | "desc">("asc");
-
-  return (
-    <EmployeeContext.Provider
-      value={{
-        lstofEmployees,
-        setEmployees,
-        selectedEmployee,
-        setSelectedEmployee,
-        orderSection,
-        setOrderSection,
-        orderBy,
-        setOrderBy,
-      }}
-    >
-      {children}
-    </EmployeeContext.Provider>
-  );
-}
-
-// Custom hook to use the context
-export function useEmployeeContext() {
-  const context = useContext(EmployeeContext);
-  if (context === undefined) {
-    throw new Error(
-      "EmployeeContext must be used within an EmployeeContextProvider."
-    );
-  }
-  return context;
-}

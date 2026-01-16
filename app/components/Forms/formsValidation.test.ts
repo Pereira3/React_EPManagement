@@ -1,4 +1,6 @@
+import { expect } from '@jest/globals';
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import {
   validateEmployeeSubmit,
   validateProjectSubmit,
@@ -9,8 +11,12 @@ import {
   maxEmpNameLength,
   minProjNameLength,
   maxProjNameLength,
-} from "@/app/context/Types-Data/initialData";
-import { Employee } from "@/app/shared/types";
+  minDate,
+  maxDate,
+} from "@/app/context/data/initialData";
+import { Employee } from "@/app/context/EmployeeContext";
+
+dayjs.extend(customParseFormat);
 
 /**
  * Cases like ' AL P h a' will be flagged as different from 'Alpha' since
@@ -267,13 +273,15 @@ describe("---------- VALIDATE EMPLOYEE SUBMIT ----------", function () {
         const validation = validateEmployeeSubmit(
           {
             name: "John Doe",
-            date: "08-01-1956",
+            date: dayjs(minDate, "DD-MM-YYYY")
+              .subtract(1, "day")
+              .format("DD-MM-YYYY"),
             role: "Team Manager",
             team: "Team D",
           },
           []
         );
-        const minDate = dayjs().subtract(70, "year").format("DD-MM-YYYY");
+
         expect(validation).toEqual({
           isValid: false,
           error: `Date must be after ${minDate}.`,
@@ -284,14 +292,13 @@ describe("---------- VALIDATE EMPLOYEE SUBMIT ----------", function () {
         const validation = validateEmployeeSubmit(
           {
             name: "John Doe",
-            date: dayjs().add(1, "day").format("DD-MM-YYYY"),
+            date: dayjs().add(2, "day").format("DD-MM-YYYY"),
             role: "Team Manager",
             team: "Team D",
           },
           []
         );
 
-        const maxDate = dayjs().format("DD-MM-YYYY");
         expect(validation).toEqual({
           isValid: false,
           error: `Date must be before ${maxDate}.`,
@@ -320,7 +327,7 @@ describe("---------- VALIDATE EMPLOYEE SUBMIT ----------", function () {
         const validation = validateEmployeeSubmit(
           {
             name: "John Doe",
-            date: dayjs().subtract(70, "year").format("DD-MM-YYYY"),
+            date: minDate,
             role: "Team Manager",
             team: "Team D",
           },
@@ -336,7 +343,7 @@ describe("---------- VALIDATE EMPLOYEE SUBMIT ----------", function () {
         const validation = validateEmployeeSubmit(
           {
             name: "John Doe",
-            date: dayjs().format("DD-MM-YYYY"),
+            date: maxDate,
             role: "Team Manager",
             team: "Team D",
           },

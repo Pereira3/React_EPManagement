@@ -1,3 +1,4 @@
+import { expect } from '@jest/globals';
 import { normalizedString } from "./utils";
 
 test("normalizedString trims and converts to uppercase", () => {

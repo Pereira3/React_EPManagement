@@ -13,14 +13,12 @@ import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 // Importing Components
-import EmployeeButton from "../../components/Buttons/Employees/EmployeesButton";
+import EmployeesButton from "./EmployeesButton";
 // Importing Contexts
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useDialogContext } from "@/app/context/DialogContext";
-import EmployeeAllocations from "./EmployeeAllocations";
-import { useSortedlstofEmployees } from "./EmployeeFunctions";
-
-import { teamsAvailable } from "@/app/context/Types-Data/initialData";
+import EmployeeDetails from "./EmployeeDetails";
+import { useEmployeesLogic } from "./useEmployeesLogic";
 
 export default function Employees() {
   const { setAction, assignment, setAssignment } =
@@ -37,10 +35,10 @@ export default function Employees() {
 
   const handleSort = (section: string) => {
     setOrderSection(section);
-    setOrderBy((prev) => (prev === "asc" ? "desc" : "asc"));
+    setOrderBy(orderBy === "asc" ? "desc" : "asc"); 
   };
 
-  const sortedEmployees = useSortedlstofEmployees();
+  const sortedEmployees = useEmployeesLogic().useSortedlstofEmployees();
 
   return (
     <div className="mainArea">
@@ -63,7 +61,7 @@ export default function Employees() {
           <span>Delete</span>
         </button>
 
-        <EmployeeButton sets={teamsAvailable} />
+        <EmployeesButton />
       </div>
       {/* Display Data */}
       <div className="data">
@@ -143,7 +141,7 @@ export default function Employees() {
           </Table>
         </TableContainer>
 
-        {assignment && selectedEmployee && <EmployeeAllocations />}
+        {assignment && selectedEmployee && <EmployeeDetails />}
       </div>
     </div>
   );

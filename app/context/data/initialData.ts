@@ -1,100 +1,103 @@
-import { Employee, Project } from "../../shared/types";
 import dayjs from "dayjs";
+import { Employee } from "../EmployeeContext";
+import { Project } from "../ProjectContext";
 
 export const minEmpNameLength = 1;
 export const maxEmpNameLength = 30;
 export const minProjNameLength = 0;
 export const maxProjNameLength = 15;
+export const minDate = (dayjs().subtract(70, "year")).format("DD-MM-YYYY");
+export const maxDate = (dayjs().add(1, "day")).format("DD-MM-YYYY");
 
 // Initial Employee data
 export const initialEmployees: Employee[] = [
   {
     name: "George Miller",
-    date: dayjs("2023-12-01").format("DD-MM-YYYY"),
+    date: "01-12-2023",
     role: "Team Manager",
     team: "Team D",
   },
   {
     name: "Alice Johnson",
-    date: dayjs("2023-01-15").format("DD-MM-YYYY"),
+    date: "15-01-2023",
     role: "Junior Engineer",
     team: "Team A",
   },
   {
     name: "Oliver White",
-    date: dayjs("2019-04-02").format("DD-MM-YYYY"),
+    date: "02-04-2019",
     role: "Junior Engineer",
     team: "Team C",
   },
   {
     name: "Diana Prince",
-    date: dayjs("2023-05-10").format("DD-MM-YYYY"),
+    date: "10-05-2023",
     role: "Junior Engineer",
     team: "Team D",
   },
   {
     name: "Ethan Hunt",
-    date: dayjs("2020-09-30").format("DD-MM-YYYY"),
+    date: "30-09-2020",
     role: "Team Manager",
     team: "Team A",
   },
   {
     name: "Charlie Brown",
-    date: dayjs("2021-07-22").format("DD-MM-YYYY"),
+    date: "22-07-2021",
     role: "Project Manager",
     team: "Team C",
   },
   {
     name: "Kevin Turner",
-    date: dayjs("2020-12-11").format("DD-MM-YYYY"),
+    date: "11-12-2020",
     role: "Team Manager",
     team: "Team C",
   },
   {
     name: "Julia Roberts",
-    date: dayjs("2018-06-25").format("DD-MM-YYYY"),
+    date: "25-06-2018",
     role: "Senior Engineer",
     team: "Team D",
   },
   {
     name: "Bob Smith",
-    date: dayjs("2022-11-03").format("DD-MM-YYYY"),
+    date: "03-11-2022",
     role: "Senior Engineer",
     team: "Team C",
   },
   {
     name: "Natalie Brooks",
-    date: dayjs("2018-11-17").format("DD-MM-YYYY"),
+    date: "17-11-2018",
     role: "Project Manager",
     team: "Team D",
   },
   {
     name: "Fiona Davis",
-    date: dayjs("2024-02-18").format("DD-MM-YYYY"),
+    date: "18-02-2024",
     role: "Senior Engineer",
     team: "Team B",
   },
   {
     name: "Ian Carter",
-    date: dayjs("2013-03-19").format("DD-MM-YYYY"),
+    date: "19-03-2013",
     role: "Junior Engineer",
     team: "Team A",
   },
   {
     name: "Hannah Lee",
-    date: dayjs("2017-08-14").format("DD-MM-YYYY"),
+    date: "14-08-2017",
     role: "Junior Engineer",
     team: "Team B",
   },
   {
     name: "Michael Adams",
-    date: dayjs("2012-09-30").format("DD-MM-YYYY"),
+    date: "30-09-2012",
     role: "Senior Engineer",
     team: "Team A",
   },
   {
     name: "Laura Green",
-    date: dayjs("2003-01-05").format("DD-MM-YYYY"),
+    date: "05-01-2003",
     role: "Junior Engineer",
     team: "Team B",
   },

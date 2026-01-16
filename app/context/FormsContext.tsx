@@ -1,40 +1,20 @@
-"use client";
-import { createContext, useContext, useState, ReactNode } from "react";
-import { formsValues } from "@/app/shared/types";
-import { FormsContextTypes } from "@/app/context/Types-Data/types";
-import dayjs from "dayjs";
+import { create } from "zustand";
+import { Employee } from "./EmployeeContext";
 
-// Create the context
-const FormsContext = createContext<FormsContextTypes | undefined>(undefined);
+export type formsValues = {
+  name: string;
+  date: string;
+  role: string;
+  team: string;
+  employees?: { emp: Employee; allocation: number }[];
+};
 
-// Provider component
-export function FormsContextProvider({ children }: { children: ReactNode }) {
-  const [formsValues, setFormValues] = useState<formsValues>({
-    name: "",
-    date: dayjs().format("DD-MM-YYYY"),
-    role: "None",
-    team: "Not Defined",
-  });
+interface FormsTypes {
+  formsValues: formsValues;
+  setFormValues: (formsValues: formsValues) => void;
+};
 
-  return (
-    <FormsContext.Provider
-      value={{
-        formsValues,
-        setFormValues,
-      }}
-    >
-      {children}
-    </FormsContext.Provider>
-  );
-}
-
-// Custom hook to use the context
-export function useFormsContext() {
-  const context = useContext(FormsContext);
-  if (context === undefined) {
-    throw new Error(
-      "useFormsContext must be used within a FormsContextProvider."
-    );
-  }
-  return context;
-}
+export const useFormsContext = create<FormsTypes>((set) => ({
+  formsValues: { name: "", date: "", role: "", team: "" },
+  setFormValues: (formsValues) => set({ formsValues }),
+}));

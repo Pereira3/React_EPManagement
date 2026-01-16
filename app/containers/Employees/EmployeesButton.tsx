@@ -1,5 +1,5 @@
 // ----- IMPORTS -----
-import "../../../containers/containers.css";
+import "../containers.css";
 // Importing MUI Components
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -12,50 +12,60 @@ import { useDialogContext } from "@/app/context/DialogContext";
 import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useEmployeesLogic } from "./useEmployeesLogic";
 
-export default function EmployeesButton({ sets }: { sets: string[] }) {
+import { teamsAvailable } from "@/app/context/data/initialData";
+import { useFormsContext } from "@/app/context/FormsContext";
+import { useErrorContext } from "@/app/context/ErrorContext";
+
+export default function EmployeesButton() {
   const { action, setAction } = useDialogContext();
-  const { selectedEmployee} = useEmployeeContext();
-  const logic = useEmployeesLogic();
+  const { selectedEmployee } = useEmployeeContext();
+  const { formsValues } = useFormsContext();
+  const { errorMessage, errorNumber } = useErrorContext();
+
+  const {
+    clearSelectionsAndErrors,
+    handleAddSubmit,
+    handleEditSubmit,
+    handleDelete,
+    handleChange,
+  } = useEmployeesLogic();
 
   if (!action) return "None";
 
   // ---------- ADD ----------
   if (action === "Add") {
     return (
-      <Dialog
-        open={true}
-        onClose={() => logic.clearSelectionsAndErrors()}
-      >
+      <Dialog open={true} onClose={() => clearSelectionsAndErrors()}>
         <DialogTitle>Add Employee</DialogTitle>
         <DialogContent>
-          {logic.errorMessage && (
+          {errorMessage && (
             <DialogContentText>
-              {logic.errorMessage + " (" + logic.errorNumber + ")"}
+              {errorMessage + " (" + errorNumber + ")"}
             </DialogContentText>
           )}
-          <form onSubmit={logic.handleAddSubmit} id="addEmployee-form">
+          <form onSubmit={handleAddSubmit} id="addEmployee-form">
             <Forms
               forms="text"
               setName="Name"
-              value={logic.formsValues.name}
-              updt={(val) => logic.handleChange("name", val)}
+              value={formsValues.name}
+              updt={(val) => handleChange("name", val)}
             />
             <Forms
               forms="date"
-              value={logic.formsValues.date}
-              updt={(val) => logic.handleChange("date", val)}
+              value={formsValues.date}
+              updt={(val) => handleChange("date", val)}
             />
             <Forms
               forms="selector"
-              value={logic.formsValues.role}
-              updt={(val) => logic.handleChange("role", val)}
+              value={formsValues.role}
+              updt={(val) => handleChange("role", val)}
             />
             <Forms
               forms="dropdown"
-              sets={sets}
+              sets={teamsAvailable}
               setName="Team"
-              value={logic.formsValues.team}
-              updt={(val) => logic.handleChange("team", val)}
+              value={formsValues.team}
+              updt={(val) => handleChange("team", val)}
             />
           </form>
         </DialogContent>
@@ -69,7 +79,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
           </button>
           <button
             onClick={() => {
-              logic.clearSelectionsAndErrors();
+              clearSelectionsAndErrors();
             }}
           >
             Cancel
@@ -86,39 +96,39 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
         <Dialog
           open={true}
           onClose={() => {
-            logic.clearSelectionsAndErrors();
+            clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Edit Employee</DialogTitle>
           <DialogContent>
-            {logic.errorMessage && (
+            {errorMessage && (
               <DialogContentText>
-                {logic.errorMessage + " (" + logic.errorNumber + ")"}
+                {errorMessage + " (" + errorNumber + ")"}
               </DialogContentText>
             )}
-            <form onSubmit={logic.handleEditSubmit} id="editEmployee-form">
+            <form onSubmit={handleEditSubmit} id="editEmployee-form">
               <Forms
                 forms="text"
                 setName="Name"
-                value={logic.formsValues.name}
-                updt={(val) => logic.handleChange("name", val)}
+                value={formsValues.name}
+                updt={(val) => handleChange("name", val)}
               />
               <Forms
                 forms="date"
-                value={logic.formsValues.date}
-                updt={(value) => logic.handleChange("date", value)}
+                value={formsValues.date}
+                updt={(value) => handleChange("date", value)}
               />
               <Forms
                 forms="selector"
-                value={logic.formsValues.role}
-                updt={(val) => logic.handleChange("role", val)}
+                value={formsValues.role}
+                updt={(val) => handleChange("role", val)}
               />
               <Forms
                 forms="dropdown"
-                sets={sets}
+                sets={teamsAvailable}
                 setName="Team"
-                value={logic.formsValues.team}
-                updt={(val) => logic.handleChange("team", val)}
+                value={formsValues.team}
+                updt={(val) => handleChange("team", val)}
               />
             </form>
           </DialogContent>
@@ -132,7 +142,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
             </button>
             <button
               onClick={() => {
-                logic.clearSelectionsAndErrors();
+                clearSelectionsAndErrors();
               }}
             >
               Cancel
@@ -145,7 +155,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
         <Dialog
           open={true}
           onClose={() => {
-            logic.clearSelectionsAndErrors();
+            clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Employee Not Selected</DialogTitle>
@@ -169,7 +179,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
         <Dialog
           open={true}
           onClose={() => {
-            logic.clearSelectionsAndErrors();
+            clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Delete Employee</DialogTitle>
@@ -179,12 +189,12 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
             projects?
           </DialogContent>
           <DialogActions>
-            <button className="actionButton" onClick={logic.handleDelete}>
+            <button className="actionButton" onClick={handleDelete}>
               Delete
             </button>
             <button
               onClick={() => {
-                logic.clearSelectionsAndErrors();
+                clearSelectionsAndErrors();
               }}
             >
               Cancel
@@ -197,7 +207,7 @@ export default function EmployeesButton({ sets }: { sets: string[] }) {
         <Dialog
           open={true}
           onClose={() => {
-            logic.clearSelectionsAndErrors();
+            clearSelectionsAndErrors();
           }}
         >
           <DialogTitle>Employee Not Selected</DialogTitle>

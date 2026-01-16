@@ -13,8 +13,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
-// Importing Types
-import { formTypes } from "../../shared/types";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 export default function Forms({
   forms,
@@ -24,16 +24,24 @@ export default function Forms({
   updt,
 }: {
   forms: string;
-  value: formTypes;
+  value: string | number;
   sets?: string[];
   setName?: string;
   updt: (val: string) => void;
 }) {
+  const date =
+    value && typeof value === "string"
+      ? dayjs(value, "DD-MM-YYYY", true)
+      : dayjs();
+
+  const defaultDate = date.isValid() ? date : dayjs();
+
   if (forms === "text") {
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
         {setName ? <span>{setName}: </span> : null}
         <TextField
+          id="input_name"
           autoFocus
           autoComplete="off"
           required
@@ -49,10 +57,17 @@ export default function Forms({
         <span>Date: </span>
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
           <DatePicker
-            value={dayjs(value, "DD-MM-YYYY")}
-            onChange={(e) => updt(e!.format("DD-MM-YYYY"))}
+            value={defaultDate}
+            onChange={(e) => {
+              if (e !== null) {
+                updt(e.format("DD-MM-YYYY"));
+              }
+            }}
             slotProps={{
-              textField: { required: true },
+              textField: {
+                required: true,
+                id: "input_date",
+              },
             }}
           />
         </LocalizationProvider>
@@ -63,8 +78,8 @@ export default function Forms({
       <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
         {setName ? <span>{setName}: </span> : null}
         <Select
+          id="input_team"
           autoComplete="false"
-          id="set"
           value={value as string}
           onChange={(e) => updt(e.target.value)}
           input={<OutlinedInput />}
@@ -82,7 +97,11 @@ export default function Forms({
       <Box sx={{ display: "flex", gap: "15px" }}>
         <span>Role: </span>
         <FormControl>
-          <RadioGroup value={value} onChange={(e) => updt(e.target.value)}>
+          <RadioGroup
+            id="input_role"
+            value={value}
+            onChange={(e) => updt(e.target.value)}
+          >
             <FormControlLabel
               value="None"
               control={<Radio />}

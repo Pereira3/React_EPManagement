@@ -5,8 +5,6 @@ import { useState } from "react";
 import Employees from "./containers/Employees/Employees";
 import Projects from "./containers/Projects/Projects";
 
-//TODO: When changing name the employee becames orphanated, the projects will not have the name updated
-//TODO: Remove null usage, X! can crash -> Add null checks
 //TODO: Explore testing of components and functions (EmployeesFunctions.ts and ProjectFunctions.ts)
 
 export default function Page() {

@@ -19,22 +19,31 @@ import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useDialogContext } from "@/app/context/DialogContext";
 import { useErrorContext } from "@/app/context/ErrorContext";
 // Importing Functions
-import { useGetterEmployeeProjects } from "./EmployeeFunctions";
+import { useEmployeesLogic } from "./useEmployeesLogic";
 
-export default function EmployeeAllocations() {
-
+export default function EmployeeDetails() {
   const { setAssignment } = useDialogContext();
   const { selectedEmployee, setSelectedEmployee } = useEmployeeContext();
 
   // For error handling
-  const { errorMessage, setError, errorNumber, setErrorNumber } = useErrorContext();
+  const { errorMessage, errorNumber } = useErrorContext();
 
-  // Get all projects where the selected employee is allocated
+  const { useGetterEmployeeProjects, clearSelectionsAndErrors } =
+    useEmployeesLogic();
+  
   const employeeProjects = useGetterEmployeeProjects();
 
   return (
-    <Dialog open={true} onClose={() => { setAssignment(false); setSelectedEmployee(null); }}>
-      <DialogTitle>Employee: {selectedEmployee!.name}</DialogTitle>
+    <Dialog
+      open={true}
+      onClose={() => {
+        setAssignment(false);
+        setSelectedEmployee(null);
+      }}
+    >
+      <DialogTitle>
+        Employee: {selectedEmployee ? selectedEmployee.name : ""}
+      </DialogTitle>
 
       <DialogContent>
         {errorMessage && (
@@ -54,9 +63,9 @@ export default function EmployeeAllocations() {
             <TableBody className="TableBody">
               {/* Display all projects where the employee is allocated */}
               {employeeProjects.map((item) => (
-                <TableRow className="TableRow" key={item!.project.name}>
-                  <TableCell align="center">{item!.project.name}</TableCell>
-                  <TableCell align="center">{item!.allocation}%</TableCell>
+                <TableRow className="TableRow" key={item.project.name}>
+                  <TableCell align="center">{item.project.name}</TableCell>
+                  <TableCell align="center">{item.allocation}%</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -65,16 +74,7 @@ export default function EmployeeAllocations() {
       </DialogContent>
 
       <DialogActions>
-        <button
-          onClick={() => {
-            setAssignment(false);
-            setSelectedEmployee(null);
-            setError("");
-            setErrorNumber(0);
-          }}
-        >
-          Close
-        </button>
+        <button onClick={clearSelectionsAndErrors}>Close</button>
       </DialogActions>
     </Dialog>
   );

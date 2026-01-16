@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
-import { Employee, formsValues, Project } from "../../shared/types";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { formsValues } from "@/app/context/FormsContext";
+import { Employee } from "@/app/context/EmployeeContext";
+import { Project } from "@/app/context/ProjectContext";
 import { normalizedString } from "@/app/shared/utils";
 import {
   teamsAvailable,
@@ -8,7 +11,10 @@ import {
   maxEmpNameLength,
   minProjNameLength,
   maxProjNameLength,
-} from "@/app/context/Types-Data/initialData";
+  minDate,
+  maxDate,
+} from "@/app/context/data/initialData";
+dayjs.extend(customParseFormat);
 
 // ---------- CONSTANTS ----------
 
@@ -61,6 +67,7 @@ const validateEmpText = (
       normalizedString(listName.name) === templatedName &&
       normalizedString(listName.name) !== normalizedString(excludeName || "")
   );
+
   if (isDuplicated && normalizedString(excludeName || "") !== templatedName) {
     return { isValid: false, error: "Employee already exists in database." };
   }
@@ -69,29 +76,26 @@ const validateEmpText = (
 };
 
 // ---------- FORMS DATE VALIDATION ----------
-const validateDate = (
-  date: string,
-  minDate: string,
-  maxDate: string
-): { isValid: boolean; error: string } => {
+const validateDate = (date: string): { isValid: boolean; error: string } => {
   if (date === "") {
     return { isValid: false, error: "Date not inserted or not valid." };
   }
 
   // To compare the dates, had to convert them to dayjs objects
   const parsedDate = dayjs(date, "DD-MM-YYYY");
-  const parsedMin = dayjs(minDate, "DD-MM-YYYY");
-  // Changed to include the day of today as a valid date
-  const parsedMax = dayjs(maxDate, "DD-MM-YYYY");
 
-  if (parsedDate.isBefore(parsedMin)) {
+  if (!parsedDate.isValid()) {
+    return { isValid: false, error: "Invalid date format." };
+  }
+
+  if (parsedDate.isBefore(dayjs(minDate, "DD-MM-YYYY"))) {
     return {
       isValid: false,
       error: `Date must be after ${minDate}.`,
     };
   }
 
-  if (parsedDate.isAfter(parsedMax)) {
+  if (parsedDate.isAfter(dayjs(maxDate, "DD-MM-YYYY"))) {
     return {
       isValid: false,
       error: `Date must be before ${maxDate}.`,
@@ -152,11 +156,7 @@ export const validateEmployeeSubmit = (
     formsValues.name,
     excludeName
   );
-  const dateValidation = validateDate(
-    formsValues.date,
-    dayjs().subtract(70, "year").format("DD-MM-YYYY"),
-    dayjs().format("DD-MM-YYYY")
-  );
+  const dateValidation = validateDate(formsValues.date);
   const teamValidation = validateEmpText(
     employees,
     "team",
@@ -223,7 +223,6 @@ export const validateConnectionSubmit = (
   listProjects: Project[],
   allocation: number
 ): { isValid: boolean; error: string } => {
-  
   if (!employee) {
     return { isValid: false, error: "Employee not found or not identified." };
   }
@@ -237,7 +236,10 @@ export const validateConnectionSubmit = (
 
   // Compare employee lists by content, not reference
   if (project.employees?.length !== projectInList.employees?.length) {
-    return { isValid: false, error: "Project Employees list lengths inconsistent." };
+    return {
+      isValid: false,
+      error: "Project Employees list lengths inconsistent.",
+    };
   }
 
   const allEmployeesMatch = project.employees?.every((projEmp) =>

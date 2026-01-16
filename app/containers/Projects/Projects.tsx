@@ -13,13 +13,13 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 // Importing Components
 import ProjectDetails from "@/app/containers/Projects/ProjectDetails";
-import ProjectsButton from "@/app/components/Buttons/Projects/ProjectsButton";
+import ProjectsButton from "./ProjectsButton";
 // Importing Contexts
 import { useProjectContext } from "@/app/context/ProjectContext";
 import { useDialogContext } from "@/app/context/DialogContext";
 import { TableSortLabel } from "@mui/material";
 
-import { useSortedlstofProjects } from "./ProjectFunctions";
+import { useProjectsLogic } from "./useProjectsLogic";
 
 export default function Projects() {
   const { assignment, setAssignment, setAction } = useDialogContext();
@@ -31,7 +31,6 @@ export default function Projects() {
     setOrderBy,
   } = useProjectContext();
 
-  const sortedProjects = useSortedlstofProjects();
 
   return (
     <div className="mainArea">
@@ -59,10 +58,7 @@ export default function Projects() {
                     active={orderBy !== null}
                     direction={orderBy || "asc"}
                     onClick={() => {
-                      setOrderBy((prev) => {
-                        if (prev === null) return "asc";
-                        return prev === "asc" ? "desc" : "asc";
-                      });
+                      setOrderBy( orderBy === null ? "asc" : orderBy === "asc" ? "desc" : "asc");
                     }}
                   >
                     Name
@@ -72,21 +68,23 @@ export default function Projects() {
               </TableRow>
             </TableHead>
             <TableBody className="TableBody">
-              {sortedProjects.map((project) => (
-                <TableRow
-                  className="TableRow"
-                  key={project.name}
-                  selected={selectedProject?.name === project.name}
-                  onClick={() => setSelectedProject(project)}
-                >
-                  <TableCell>{project.name}</TableCell>
-                  <TableCell align="center">
-                    <button onClick={() => setAssignment(true)}>
-                      Employees
-                    </button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {useProjectsLogic()
+                .useSortedlstofProjects()
+                .map((project) => (
+                  <TableRow
+                    className="TableRow"
+                    key={project.name}
+                    selected={selectedProject?.name === project.name}
+                    onClick={() => setSelectedProject(project)}
+                  >
+                    <TableCell>{project.name}</TableCell>
+                    <TableCell align="center">
+                      <button onClick={() => setAssignment(true)}>
+                        Employees
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
