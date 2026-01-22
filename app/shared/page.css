@@ -2,8 +2,7 @@
 
 html, body{
   background: rgb(235, 235, 235);
-  max-height: 100vh;
-  overflow: none;
+  color: black;
 }
 
 nav {
