@@ -21,7 +21,7 @@ import { useDialogContext } from "@/app/context/DialogContext";
 import { TablePagination, TableSortLabel } from "@mui/material";
 
 import { useProjectsLogic } from "./useProjectsLogic";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export default function Projects() {
   const { assignment, setAssignment, setAction } = useDialogContext();

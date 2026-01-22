@@ -1,7 +1,6 @@
 "use client";
 // ---------- IMPORTS ----------
 import { useState } from "react";
-import Head from "next/head";
 // Importing Components
 import Employees from "./containers/Employees/Employees";
 import Projects from "./containers/Projects/Projects";
