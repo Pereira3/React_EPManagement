@@ -217,6 +217,23 @@ Sort function expects a number so localeCompare is needed
     });
   }
 
+  function useFilteredlstofEmployees(searchTerm: string): Employee[] {
+
+    const sortedEmployees = useSortedlstofEmployees();
+
+    if (!searchTerm) return sortedEmployees;
+
+    const normalizedSearch = normalizedString(searchTerm);
+    return sortedEmployees.filter((employee) => {
+      return (
+        normalizedString(employee.name).includes(normalizedSearch) ||
+        normalizedString(employee.date).includes(normalizedSearch) ||
+        normalizedString(employee.role).includes(normalizedSearch) ||
+        normalizedString(employee.team).includes(normalizedSearch)
+      );
+    });
+  }
+
   return {
     formsValues,
     errorMessage,
@@ -228,5 +245,6 @@ Sort function expects a number so localeCompare is needed
     clearSelectionsAndErrors,
     useGetterEmployeeProjects,
     useSortedlstofEmployees,
+    useFilteredlstofEmployees,
   };
 }

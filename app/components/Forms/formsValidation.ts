@@ -251,7 +251,7 @@ export const validateConnectionSubmit = (
     )
   );
 
-  if (!allEmployeesMatch) {
+  if (!allEmployeesMatch && allEmployeesMatch !== undefined) {
     return { isValid: false, error: "Project Employees are inconsistent." };
   }
 

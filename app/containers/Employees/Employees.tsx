@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+import SearchIcon from "@mui/icons-material/Search";
 // Importing Components
 import EmployeesButton from "./EmployeesButton";
 // Importing Contexts
@@ -19,10 +20,11 @@ import { useEmployeeContext } from "@/app/context/EmployeeContext";
 import { useDialogContext } from "@/app/context/DialogContext";
 import EmployeeDetails from "./EmployeeDetails";
 import { useEmployeesLogic } from "./useEmployeesLogic";
+import { TablePagination } from "@mui/material";
+import { useEffect } from "react";
 
 export default function Employees() {
-  const { setAction, assignment, setAssignment } =
-    useDialogContext();
+  const { setAction, assignment, setAssignment } = useDialogContext();
 
   const {
     selectedEmployee,
@@ -31,14 +33,36 @@ export default function Employees() {
     setOrderSection,
     orderBy,
     setOrderBy,
+    pages,
+    setPages,
+    rowsPerPage,
+    setRowsPerPage,
+    searchTerm,
+    setSearchTerm,
   } = useEmployeeContext();
 
   const handleSort = (section: string) => {
     setOrderSection(section);
-    setOrderBy(orderBy === "asc" ? "desc" : "asc"); 
+    setOrderBy(orderBy === "asc" ? "desc" : "asc");
   };
 
-  const sortedEmployees = useEmployeesLogic().useSortedlstofEmployees();
+  const filteredEmployees = useEmployeesLogic().useFilteredlstofEmployees(searchTerm);
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setPages(0);
+  }, [searchTerm, setPages]);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPages(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPages(0);
+  };
 
   return (
     <div className="mainArea">
@@ -63,9 +87,21 @@ export default function Employees() {
 
         <EmployeesButton />
       </div>
+      {/* Search Bar */}
+      <div className="searchBar">
+        <SearchIcon />
+        <input
+          type="text"
+          placeholder="Search employees..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       {/* Display Data */}
       <div className="data">
-        <TableContainer component={Paper} className="TableContainer">
+        <TableContainer
+          component={Paper}
+          className="TableContainer">
           <Table stickyHeader className="Table">
             <TableHead className="TableHead">
               <TableRow>
@@ -117,29 +153,40 @@ export default function Employees() {
               </TableRow>
             </TableHead>
             <TableBody className="TableBody">
-              {sortedEmployees.map((employee) => (
-                <TableRow
-                  className="TableRow"
-                  key={employee.name}
-                  selected={selectedEmployee?.name === employee.name}
-                  onClick={() => {
-                    setSelectedEmployee(employee);
-                  }}
-                >
-                  <TableCell> {employee.name} </TableCell>
-                  <TableCell align="center">{employee.date}</TableCell>
-                  <TableCell align="center">{employee.role}</TableCell>
-                  <TableCell align="center">{employee.team}</TableCell>
-                  <TableCell align="center">
-                    <button onClick={() => setAssignment(true)}>
-                      Projects
-                    </button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {filteredEmployees
+                .slice(pages * rowsPerPage, pages * rowsPerPage + rowsPerPage)
+                .map((employee) => (
+                  <TableRow
+                    className="TableRow"
+                    key={employee.name}
+                    selected={selectedEmployee?.name === employee.name}
+                    onClick={() => {
+                      setSelectedEmployee(employee);
+                    }}
+                  >
+                    <TableCell> {employee.name} </TableCell>
+                    <TableCell align="center">{employee.date}</TableCell>
+                    <TableCell align="center">{employee.role}</TableCell>
+                    <TableCell align="center">{employee.team}</TableCell>
+                    <TableCell align="center">
+                      <button onClick={() => setAssignment(true)}>
+                        Projects
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
+          count={filteredEmployees.length}
+          rowsPerPage={rowsPerPage}
+          page={pages}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
 
         {assignment && selectedEmployee && <EmployeeDetails />}
       </div>

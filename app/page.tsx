@@ -1,11 +1,10 @@
 "use client";
 // ---------- IMPORTS ----------
 import { useState } from "react";
+import Head from "next/head";
 // Importing Components
 import Employees from "./containers/Employees/Employees";
 import Projects from "./containers/Projects/Projects";
-
-//TODO: Explore testing of components and functions (EmployeesFunctions.ts and ProjectFunctions.ts)
 
 export default function Page() {
   const [type, setType] = useState<"Employees" | "Projects">("Employees");

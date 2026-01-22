@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
-html {
+html, body{
   background: rgb(235, 235, 235);
-  color: black;
-  overflow-y: hidden;
+  max-height: 100vh;
+  overflow: none;
 }
+
 nav {
   background: rgb(157, 0, 0);
   padding: 1.2rem;
@@ -12,6 +13,7 @@ nav {
   color: rgb(235, 235, 235);
   font-size: xx-large;
 }
+
 main {
   padding: 1.2rem;
   font-size: larger;

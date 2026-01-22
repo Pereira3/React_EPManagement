@@ -11,15 +11,17 @@ import Paper from "@mui/material/Paper";
 // Importing Icons
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+import SearchIcon from "@mui/icons-material/Search";
 // Importing Components
 import ProjectDetails from "@/app/containers/Projects/ProjectDetails";
 import ProjectsButton from "./ProjectsButton";
 // Importing Contexts
 import { useProjectContext } from "@/app/context/ProjectContext";
 import { useDialogContext } from "@/app/context/DialogContext";
-import { TableSortLabel } from "@mui/material";
+import { TablePagination, TableSortLabel } from "@mui/material";
 
 import { useProjectsLogic } from "./useProjectsLogic";
+import { useEffect, useRef } from "react";
 
 export default function Projects() {
   const { assignment, setAssignment, setAction } = useDialogContext();
@@ -29,8 +31,32 @@ export default function Projects() {
     setSelectedProject,
     orderBy,
     setOrderBy,
+    pages,
+    setPages,
+    rowsPerPage,
+    setRowsPerPage,
+    searchTerm,
+    setSearchTerm,
   } = useProjectContext();
 
+  const filteredProjects =
+    useProjectsLogic().useFilteredlstofProjects(searchTerm);
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setPages(0);
+  }, [searchTerm, setPages]);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPages(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPages(0);
+  };
 
   return (
     <div className="mainArea">
@@ -47,6 +73,16 @@ export default function Projects() {
 
         <ProjectsButton />
       </div>
+      {/* Search Bar */}
+      <div className="searchBar">
+        <SearchIcon />
+        <input
+          type="text"
+          placeholder="Search employees..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       {/** Display Data */}
       <div className="data">
         <TableContainer component={Paper} className="TableContainer">
@@ -58,7 +94,13 @@ export default function Projects() {
                     active={orderBy !== null}
                     direction={orderBy || "asc"}
                     onClick={() => {
-                      setOrderBy( orderBy === null ? "asc" : orderBy === "asc" ? "desc" : "asc");
+                      setOrderBy(
+                        orderBy === null
+                          ? "asc"
+                          : orderBy === "asc"
+                            ? "desc"
+                            : "asc",
+                      );
                     }}
                   >
                     Name
@@ -68,8 +110,8 @@ export default function Projects() {
               </TableRow>
             </TableHead>
             <TableBody className="TableBody">
-              {useProjectsLogic()
-                .useSortedlstofProjects()
+              {filteredProjects
+                .slice(pages * rowsPerPage, pages * rowsPerPage + rowsPerPage)
                 .map((project) => (
                   <TableRow
                     className="TableRow"
@@ -88,6 +130,15 @@ export default function Projects() {
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          rowsPerPage={rowsPerPage}
+          component="div"
+          count={filteredProjects.length}
+          page={pages}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
 
         {assignment && selectedProject && <ProjectDetails />}
       </div>

@@ -1,4 +1,6 @@
 .mainArea {
+  display: flex;
+  flex-direction: column;
   padding: 1rem;
 }
 
@@ -22,9 +24,30 @@ button:not(.actionButton) {
   border: 2px solid black;
 }
 
+.searchBar {
+  display: flex;
+  align-items: center;
+  margin-top: 0.625rem;
+  padding: 0.2rem 0.625rem;
+  border: 2px solid black;
+  border-radius: 0.25rem;
+  background-color: rgb(230, 230, 230);
+}
+
+.searchBar input {
+  flex: 1;
+  border: none;
+  outline: none;
+}
+
+.searchBar input::placeholder {
+  color: rgb(150, 150, 150);
+}
+
 .TableContainer {
-  max-height: calc(100vh - 17.2rem);
-  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   border-left: none;
   border-right: none;
   th {

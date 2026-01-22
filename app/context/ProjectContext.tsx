@@ -17,6 +17,12 @@ interface ProjectTypes {
   setSelectedProject: (selectedProject: Project | null) => void;
   orderBy: "asc" | "desc";
   setOrderBy: (orderBy: "asc" | "desc") => void;
+  pages: number;
+  setPages: (pages: number) => void;
+  rowsPerPage: number;
+  setRowsPerPage: (rowsPerPage: number) => void;
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
 }
 
 export const useProjectContext = create<ProjectTypes>()(
@@ -28,6 +34,12 @@ export const useProjectContext = create<ProjectTypes>()(
     setSelectedProject: (selectedProject) => set({ selectedProject }),
     orderBy: "asc",
     setOrderBy: (orderBy) => set({ orderBy }),
+    pages: 0,
+    setPages: (pages) => set({ pages }),
+    rowsPerPage: 5,
+    setRowsPerPage: (rowsPerPage) => set({ rowsPerPage }),
+    searchTerm: "",
+    setSearchTerm: (searchTerm) => set({ searchTerm }),
   })
   /*{
       name: "employee-storage", // localStorage key

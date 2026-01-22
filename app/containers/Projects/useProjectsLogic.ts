@@ -172,6 +172,20 @@ after filtering the whole employee list to only include that specific employees
     }
   }
 
+  function useFilteredlstofProjects(searchTerm: string): Project[] {
+  
+      const sortedProjects = useSortedlstofProjects();
+  
+      if (!searchTerm) return sortedProjects;
+  
+      const normalizedSearch = normalizedString(searchTerm);
+      return sortedProjects.filter((project) => {
+        return (
+          normalizedString(project.name).includes(normalizedSearch)
+        );
+      });
+    }
+
   return {
     projectName,
     errorMessage,
@@ -184,5 +198,6 @@ after filtering the whole employee list to only include that specific employees
     useGetterProjectEmployeesList,
     detachEmployee,
     handleAttachEmployee,
+    useFilteredlstofProjects,
   };
 }
